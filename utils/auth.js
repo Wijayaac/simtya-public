@@ -40,4 +40,5 @@ export const login = async ({ token }) => {
 };
 export const logout = () => {
   Cookies.remove("token");
+  Router.push("/auth/login");
 };

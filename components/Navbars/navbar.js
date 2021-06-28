@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
+  Button,
   ButtonDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
+
+// Utils lib
+import { logout } from "../../utils/auth";
 
 export default function Navbar() {
   const [dropdownOpen, setOpen] = useState(false);
@@ -23,25 +27,15 @@ export default function Navbar() {
           <Image
             src="/vercel.svg"
             width="48"
-            height="48"
+            height="24"
             alt="profile custom"
           />
         </DropdownToggle>
         <DropdownMenu>
           <DropdownItem>
-            <Link href="#">
-              <a className="dropdown-item">Loan Vehicle</a>
-            </Link>
-          </DropdownItem>
-          <DropdownItem>
-            <Link href="#">
-              <a className="dropdown-item">Profile</a>
-            </Link>
-          </DropdownItem>
-          <DropdownItem>
-            <Link href="#">
-              <a className="dropdown-item">Logout</a>
-            </Link>
+            <Button color="outline-dark" onClick={logout} block>
+              Logout
+            </Button>
           </DropdownItem>
         </DropdownMenu>
       </ButtonDropdown>

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Cookies from "js-cookie";
+import router from "next/router";
 
 // utils
 import { parseJWT } from "../../utils/parseJWT";
@@ -29,10 +30,12 @@ export default class Sidebar extends Component {
 
         <div className="list-group list-group-flush">
           {/* <!-- Get menu from @menu params ^^^ --> */}
-          <ul className="nav nav-pills flex-column mb-auto">
-            <li className="nav-item border-bottom border-white mb-4">
+          <ul className="nav nav-pills flex-column mb-auto border-bottom border-white">
+            <li className="nav-item mb-4">
               <Link href="/">
-                <a className="nav-link fs-5 my-2 active" aria-current="page">
+                <a
+                  className="nav-link fs-5 my-2 text-white"
+                  aria-current="page">
                   <i className="mx-4 bi bi-bar-chart"></i>
                   Dashboard
                 </a>
@@ -47,7 +50,7 @@ export default class Sidebar extends Component {
                   <>
                     <ul className="nav nav-pills flex-column mb-auto">
                       <li>
-                        <Link href="/">
+                        <Link href="/admin/pickup">
                           <a className="nav-link fs-5 my-2 text-white">
                             <i className="mx-4 bi bi-geo-alt-fill"></i>
                             Pickup
@@ -56,7 +59,7 @@ export default class Sidebar extends Component {
                       </li>
                       <hr className="text-white-50" />
                       <li>
-                        <Link href="/">
+                        <Link href="/admin/loan">
                           <a className="nav-link fs-5 my-2 text-white">
                             <i className="mx-4 bi bi-speedometer"></i>
                             Loan
@@ -64,8 +67,8 @@ export default class Sidebar extends Component {
                         </Link>
                       </li>
                       <hr className="text-white-50" />
-                      <li className="border-top border-white mt-5">
-                        <Link href="/">
+                      <li>
+                        <Link href="/admin/service">
                           <a className="nav-link fs-5 my-2 text-white">
                             <i className="mx-4 bi bi-person-circle"></i>
                             Service
@@ -74,7 +77,7 @@ export default class Sidebar extends Component {
                       </li>
                       <hr className="text-white-50" />
                       <li className="border-top border-white mt-5">
-                        <Link href="/">
+                        <Link href="/admin/inventory">
                           <a className="nav-link fs-5 my-2 text-white">
                             <i className="mx-4 bi bi-person-circle"></i>
                             Inventory
@@ -90,7 +93,7 @@ export default class Sidebar extends Component {
                   <>
                     <ul className="nav nav-pills flex-column mb-auto">
                       <li>
-                        <Link href="/">
+                        <Link href="/driver/pickup">
                           <a className="nav-link fs-5 my-2 text-white">
                             <i className="mx-4 bi bi-geo-alt-fill"></i>
                             Pickup
@@ -99,7 +102,7 @@ export default class Sidebar extends Component {
                       </li>
                       <hr className="text-white-50" />
                       <li>
-                        <Link href="/">
+                        <Link href="/driver/service">
                           <a className="nav-link fs-5 my-2 text-white">
                             <i className="mx-4 bi bi-speedometer"></i>
                             Service
@@ -115,7 +118,7 @@ export default class Sidebar extends Component {
                   <>
                     <ul className="nav nav-pills flex-column mb-auto">
                       <li>
-                        <Link href="/">
+                        <Link href="/member/pickup">
                           <a className="nav-link fs-5 my-2 text-white">
                             <i className="mx-4 bi bi-geo-alt-fill"></i>
                             Pickup
@@ -124,16 +127,16 @@ export default class Sidebar extends Component {
                       </li>
                       <hr className="text-white-50" />
                       <li>
-                        <Link href="/">
+                        <Link href="/member/loan">
                           <a className="nav-link fs-5 my-2 text-white">
                             <i className="mx-4 bi bi-speedometer"></i>
-                            Service
+                            Loan
                           </a>
                         </Link>
                       </li>
                       <hr className="text-white-50" />
                       <li>
-                        <Link href="/">
+                        <Link href="/member/profile">
                           <a className="nav-link fs-5 my-2 text-white">
                             <i className="mx-4 bi bi-speedometer"></i>
                             Profile
