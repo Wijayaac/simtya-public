@@ -1,6 +1,7 @@
 import React from "react";
 import App from "next/app";
 import Head from "next/head";
+import Cookies from "js-cookie";
 
 //CSS globals
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -10,17 +11,8 @@ import "../styles/index.css";
 import "../styles/auth.css";
 import "../styles/sidebar.css";
 
-// function MyApp({ Component, pageProps }) {
-//   return (
-//     <>
-//       <Head>
-//         <meta name="viewport" content="width=device-width, initial-scale=1" />
-//       </Head>
-//       <Component {...pageProps} />
-//     </>
-//   );
-// }
-
+// utils parsing JWT
+import { parseJWT } from "../utils/parseJWT";
 export default class MyApp extends App {
   static async getInitialProps({ Component, router, ctx }) {
     let pageProps = {};
@@ -44,7 +36,6 @@ export default class MyApp extends App {
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
           <title>YOS</title>
-          {/* <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script> */}
         </Head>
         <Layout>
           <Component {...pageProps} />
@@ -53,5 +44,3 @@ export default class MyApp extends App {
     );
   }
 }
-
-// export default MyApp;

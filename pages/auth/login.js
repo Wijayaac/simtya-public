@@ -7,13 +7,9 @@ import Link from "next/link";
 
 // utils for login
 import { login } from "../../utils/auth";
+import { parseJWT } from "../../utils/parseJWT";
 
 // parsing jwt for get the payload object
-const parseJWT = (token) => {
-  const base64URL = token.split(".")[1];
-  const base64 = base64URL.replace("-", ".").replace("-", "/");
-  return JSON.parse(window.atob(base64));
-};
 
 export default function Login() {
   const [email, setEmail] = useState([]);
