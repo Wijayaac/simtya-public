@@ -1,4 +1,6 @@
-import { set } from "js-cookie";
+import axios from "axios";
+import Cookies from "js-cookie";
+import router from "next/router";
 import React, { useState } from "react";
 import {
   Card,
@@ -18,14 +20,51 @@ import Admin from "../../layouts/Admin";
 export default function Inventory() {
   const [name, setName] = useState([]);
   const [type, setType] = useState([]);
-  const [vehicle, setVehicle] = useState([]);
+  const [brand, setBrand] = useState([]);
   const [years, setYears] = useState([]);
+  const [photo, setPhoto] = useState(false);
   const [description, setDescription] = useState([]);
 
-  const handleSubmit = () => {};
+  const getData = async (e) => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/admin/inventory/`,
+      {
+        headers: {
+          Authorization: Cookies.get("token"),
+        },
+      }
+    );
+    console.log(response.data);
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/admin/inventory`;
+      let data = new FormData();
+      data.append("name", name);
+      data.append("type", type);
+      data.append("brand", brand);
+      data.append("years", years);
+      data.append("photo", photo, photo.name);
+      data.append("description", description);
+      const response = await axios.post(url, data, {
+        headers: {
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "multipart/form-data",
+          Authorization: Cookies.get("token"),
+        },
+      });
+      console.log(data);
+      // router.push("/admin/inventory");
+    } catch (error) {
+      console.log("Error inserting new vehicle", error);
+    }
+  };
   return (
     <>
       <div className="container">
+        <button onClick={getData}>Get Data</button>
         <div className="text-center fs-2 fw-bold">
           <p>Inventory List</p>
         </div>
@@ -47,23 +86,30 @@ export default function Inventory() {
               </div>
             </div>
             <div className="mb-3">
-              <label forHtml="inputType" className="form-label">
+              <label
+                forHtml="inputType"
+                onChange={(e) => setType(e.target.value)}
+                className="form-label">
                 Type
               </label>
-              <select className="form-select" name="type" id="">
-                <option value="none" selected>
-                  Select Type
-                </option>
+              <input
+                name="name"
+                onChange={(e) => setType(e.target.value)}
+                type="text"
+                className="form-control"
+                aria-describedby="nameHelp"
+              />
+              {/* <select className="form-select" id="">
                 <option value="motorcycle">Motorcycle</option>
                 <option value="car">Car</option>
-              </select>
+              </select> */}
             </div>
             <div className="mb-3">
               <label forHtml="inputBrand" className="form-label">
                 Vehicle Brand
               </label>
               <input
-                onChange={(e) => setVehicle(e.target.value)}
+                onChange={(e) => setBrand(e.target.value)}
                 type="text"
                 name="brand"
                 className="form-control"
@@ -86,7 +132,7 @@ export default function Inventory() {
                 Photo
               </label>
               <input
-                // onChange={(e) => setPhoto(e.target.value)}
+                onChange={(e) => setPhoto(e.target.files[0])}
                 type="file"
                 name="photo"
                 className="form-control"
@@ -114,13 +160,34 @@ export default function Inventory() {
             </div>
           </form>
         </Modal>
-        <div className="row row-cols-md-4 row-col-lg-5">
+        {/* <div className="row row-cols-md-4 row-col-lg-5">
           <div className="col">
             <Card className="mt-5">
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
+                alt="Card image cap"
+              />
+              <CardBody>
+                <CardTitle tag="h5">Card title</CardTitle>
+                <CardSubtitle tag="h6" className="mb-2 text-muted">
+                  Card subtitle
+                </CardSubtitle>
+                <CardText>
+                  Some quick example text to build on the card title and make up
+                  the bulk of the card`s content.
+                </CardText>
+                <Button>Button</Button>
+              </CardBody>
+            </Card>
+          </div> */}
+        {/* <div className="col">
+            <Card className="mt-5">
+              <CardImg
+                top
+                width="100%"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>
@@ -141,7 +208,7 @@ export default function Inventory() {
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>
@@ -162,7 +229,7 @@ export default function Inventory() {
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>
@@ -183,7 +250,7 @@ export default function Inventory() {
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>
@@ -199,28 +266,8 @@ export default function Inventory() {
               </CardBody>
             </Card>
           </div>
-          <div className="col">
-            <Card className="mt-5">
-              <CardImg
-                top
-                width="100%"
-                src="/assets/318x180.svg"
-                alt="Card image cap"
-              />
-              <CardBody>
-                <CardTitle tag="h5">Card title</CardTitle>
-                <CardSubtitle tag="h6" className="mb-2 text-muted">
-                  Card subtitle
-                </CardSubtitle>
-                <CardText>
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card`s content.
-                </CardText>
-                <Button>Button</Button>
-              </CardBody>
-            </Card>
-          </div>
-        </div>
+         */}
+        {/* </div> */}
       </div>
     </>
   );

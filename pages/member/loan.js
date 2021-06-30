@@ -105,7 +105,7 @@ export default function Loan() {
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>
@@ -126,7 +126,7 @@ export default function Loan() {
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>
@@ -147,7 +147,7 @@ export default function Loan() {
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>
@@ -168,7 +168,7 @@ export default function Loan() {
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>
@@ -189,7 +189,7 @@ export default function Loan() {
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>

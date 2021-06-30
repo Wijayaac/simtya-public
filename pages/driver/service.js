@@ -8,6 +8,7 @@ import {
   CardSubtitle,
   Button,
 } from "reactstrap";
+import Image from "next/image";
 
 // Components UI
 import Modal from "../../components/Modals/modal";
@@ -20,6 +21,18 @@ export default function Service() {
       <div className="container">
         <div className="text-center fs-2 fw-bold">
           <p>Service List</p>
+          {/* <Image
+            alt="Next.js logo"
+            src="https://assets.vercel.com/image/upload/v1538361091/repositories/next-js/next-js-bg.png"
+            width={1200}
+            height={400}
+          /> */}
+          <Image
+            src="http://localhost:4000/uploads/1624934327941_logo.png"
+            width="100"
+            height="100"
+            alt="logo-api"
+          />
         </div>
         <Modal buttonLabel="Add Service" className="my-2">
           <form>
@@ -105,7 +118,7 @@ export default function Service() {
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>
@@ -126,7 +139,7 @@ export default function Service() {
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>
@@ -147,7 +160,7 @@ export default function Service() {
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>
@@ -168,7 +181,7 @@ export default function Service() {
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>
@@ -189,7 +202,7 @@ export default function Service() {
               <CardImg
                 top
                 width="100%"
-                src="/assets/318x180.svg"
+                src="http://localhost:4000/uploads/1624934327941_logo.png"
                 alt="Card image cap"
               />
               <CardBody>
