@@ -23,7 +23,7 @@ export default class Sidebar extends Component {
   };
   render() {
     return (
-      <div className="bg-dark border-right" id="sidebar-wrapper">
+      <div className="bg-dark border-right fixed" id="sidebar-wrapper">
         <div className="sidebar-heading text-center text-white py-5">
           <i className="bi bi-cone-striped"></i> Undagi Code
         </div>

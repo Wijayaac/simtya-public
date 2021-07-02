@@ -2,10 +2,12 @@ import axios from "axios";
 import Router from "next/router";
 import Cookies from "js-cookie";
 import nextCookies from "next-cookies";
+import { parseJWT } from "./parseJWT";
 
 export const HandleAuthSSR = async (ctx) => {
   const { token } = nextCookies(ctx);
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/admin/list`;
+
+  const { role } = parseJWT(token);
 
   const redirectOnError = () => {
     console.log("redirect into login page");
@@ -16,17 +18,35 @@ export const HandleAuthSSR = async (ctx) => {
       ctx.res.end();
     }
   };
+  const redirectOnRole = (role) => {
+    console.log("redirect into login page");
+    if (typeof window !== "undefined") {
+      Router.back();
+    } else {
+      ctx.res.writeHead(302, { Location: `/${role}/` });
+      ctx.res.end();
+    }
+  };
+
   try {
     if (!token) {
       return redirectOnError();
     }
-    const response = await axios.get(url, {
-      headers: { Authorization: token },
-    });
-    console.log(response.data);
-    if (!response.data.user) {
-      return redirectOnError();
+    console.log(role);
+    switch (role) {
+      case 1:
+        break;
+      case 2:
+        redirectOnRole("driver");
+        break;
+      case 3:
+        redirectOnRole("member");
+        break;
+
+      default:
+        break;
     }
+    return token;
   } catch (error) {
     console.log("Error when try authorizing users", error);
     return redirectOnError();
