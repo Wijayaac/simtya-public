@@ -1,9 +1,9 @@
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import router from "next/router";
-import Link from "next/link";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+
 import {
   Card,
   CardImg,
@@ -11,7 +11,6 @@ import {
   CardBody,
   CardTitle,
   CardSubtitle,
-  Button,
 } from "reactstrap";
 import FadeIn from "react-fade-in/lib/FadeIn";
 
@@ -20,9 +19,18 @@ import Modal from "../../../components/Modals/modal";
 import ArticlePlaceholder from "../../../components/Skeleton/ArticlePlaceholder";
 // Layout Component
 import Admin from "../../../layouts/Admin";
-import { set } from "lodash";
+import { HandleAdminSSR } from "../../../utils/auth";
 
-export default function Inventory() {
+export async function getServerSideProps(ctx) {
+  const token = await HandleAdminSSR(ctx);
+  return {
+    props: {
+      token: token,
+    },
+  };
+}
+export default function Inventory(props) {
+  const { token } = props;
   const [name, setName] = useState([]);
   const [type, setType] = useState([]);
   const [brand, setBrand] = useState([]);
@@ -42,7 +50,7 @@ export default function Inventory() {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/admin/inventory/`, {
         headers: {
-          Authorization: Cookies.get("token"),
+          Authorization: token,
         },
       })
       .then((response) => {
@@ -52,7 +60,7 @@ export default function Inventory() {
         console.error(error);
       });
     setLoading(false);
-  }, []);
+  }, [token]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -71,7 +79,7 @@ export default function Inventory() {
           Accept: "application/json",
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "multipart/form-data",
-          Authorization: Cookies.get("token"),
+          Authorization: token,
         },
       })
       .then((res) => {
@@ -83,7 +91,7 @@ export default function Inventory() {
         console.log("Error inserting new vehicle", error);
       });
   };
-  const handleUpdate = (id) => {
+  const handleDetail = (id) => {
     router.push(`/admin/inventory/detail/${id}`);
   };
   const handleDelete = (id) => {
@@ -93,11 +101,11 @@ export default function Inventory() {
         headers: {
           Accept: "application/json",
           "Access-Control-Allow-Origin": "*",
-          Authorization: Cookies.get("token"),
+          Authorization: token,
         },
       })
-      .then((data) => {
-        router.push("/inventory", "/inventory", "shallow");
+      .then(() => {
+        router.reload();
       })
       .catch((err) => console.log(err));
   };
@@ -262,7 +270,7 @@ export default function Inventory() {
                         <CardText>{vehicle.description}</CardText>
                         <button
                           type="button"
-                          onClick={handleUpdate.bind(this, vehicle.id)}
+                          onClick={handleDetail.bind(this, vehicle.id)}
                           className="btn btn-warning mx-2">
                           <i className="bi bi-pencil me-1"></i>
                           Details

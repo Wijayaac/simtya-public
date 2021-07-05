@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
 const ModalExample = (props) => {
-  const { buttonLabel, className } = props;
+  const { buttonLabel, className, size } = props;
 
   const [modal, setModal] = useState(false);
 
@@ -13,7 +13,7 @@ const ModalExample = (props) => {
       <Button color="danger" onClick={toggle}>
         {buttonLabel}
       </Button>
-      <Modal isOpen={modal} toggle={toggle} className={className}>
+      <Modal isOpen={modal} toggle={toggle} size={size} className={className}>
         <ModalHeader toggle={toggle}>{buttonLabel}</ModalHeader>
         <ModalBody>{props.children}</ModalBody>
       </Modal>

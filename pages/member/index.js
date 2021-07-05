@@ -1,12 +1,21 @@
 import React from "react";
-import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
+
+// utils auth library
+import { HandleMemberSSR } from "../../utils/auth";
 
 // components
 import Admin from "../../layouts/Admin";
 
-export default function Dashboard() {
+export async function getServerSideProps(ctx) {
+  const token = await HandleMemberSSR(ctx);
+  return {
+    props: {
+      token: token,
+    },
+  };
+}
+export default function Dashboard(props) {
+  console.log(props);
   return (
     <>
       <div className="absolute top-0 bottom-0 d-flex flex-nowrap">

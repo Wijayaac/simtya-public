@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import router from "next/router";
 import Image from "next/image";
 import axios from "axios";
-// utils library
-import { HandleAuthSSR } from "../../../../utils/auth";
+
+// utils auth library
+import { HandleAdminSSR } from "../../../../utils/auth";
 
 // components layout
 import ArticlePlaceholder from "../../../../components/Skeleton/ArticlePlaceholder";
@@ -12,7 +13,7 @@ import ArticlePlaceholder from "../../../../components/Skeleton/ArticlePlacehold
 import Admin from "../../../../layouts/Admin";
 
 export async function getServerSideProps(ctx) {
-  const token = await HandleAuthSSR(ctx);
+  const token = await HandleAdminSSR(ctx);
 
   const { id } = ctx.query;
 
