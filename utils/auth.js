@@ -132,9 +132,9 @@ export const HandleDriverSSR = async (ctx) => {
         redirectOnRole("admin");
         break;
       case 2:
-        redirectOnRole("driver");
         break;
       case 3:
+        redirectOnRole("member");
         break;
 
       default:

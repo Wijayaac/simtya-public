@@ -50,16 +50,15 @@ export default function Pickup(props) {
   const [end, setEnd] = useState(false);
   const [route, setRoute] = useState([]);
   const [description, setDescription] = useState([]);
-
   useEffect(() => {
-    console.log(pickup);
     setLoading(false);
-  }, [pickup]);
+  }, []);
 
   const handleDetail = (id) => {
     router.push(`/admin/pickup/detail/${id}`);
   };
   const handleDelete = (id) => {
+    setLoading(true);
     const url = `${process.env.NEXT_PUBLIC_API_URL}/admin/pickup/${id}`;
     axios
       .delete(url, {
@@ -69,10 +68,15 @@ export default function Pickup(props) {
           Authorization: token,
         },
       })
-      .then(() => router.reload())
+      .then(() => {
+        setLoading(false);
+        router.reload();
+      })
       .catch((err) => console.log(err));
   };
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault;
+    setLoading(true);
     const url = `${process.env.NEXT_PUBLIC_API_URL}/admin/pickup`;
     axios
       .post(
@@ -93,12 +97,12 @@ export default function Pickup(props) {
         }
       )
       .then(() => {
+        setLoading(false);
         router.reload();
       })
       .catch((error) => console.log(error));
   };
-  let name = vehicle.map(({ name }) => name);
-  let id = vehicle.map(({ id }) => id);
+
   return (
     <>
       <div className="container px-5">

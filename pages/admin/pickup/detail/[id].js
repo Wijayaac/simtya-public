@@ -52,8 +52,6 @@ export default function PickupEdit(props) {
   const [description, setDescription] = useState(pickup[0].description);
   const [isLoading, setLoading] = useState(true);
 
-  console.log(start, end);
-
   useEffect(() => {
     setLoading(false);
   }, []);
@@ -61,7 +59,6 @@ export default function PickupEdit(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    const { token } = props;
     const url = `${process.env.NEXT_PUBLIC_API_URL}/admin/pickup`;
     axios
       .put(
