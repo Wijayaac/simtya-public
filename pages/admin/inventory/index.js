@@ -150,7 +150,8 @@ export default function Inventory(props) {
                 nam="type"
                 onChange={(e) => setType(e.target.value)}
                 className="form-select"
-                defaultValue="Please Select one">
+                required>
+                <option selected>Select one Type</option>
                 <option value="motorcycle">Motorcycle</option>
                 <option value="car">Car</option>
               </select>
@@ -264,10 +265,9 @@ export default function Inventory(props) {
                       />
                       <CardBody>
                         <CardTitle tag="h5">{vehicle.name}</CardTitle>
-                        <CardSubtitle tag="h6" className="mb-2 text-muted">
+                        <CardSubtitle tag="h6" className="mb-3 text-muted">
                           {vehicle.type}
                         </CardSubtitle>
-                        <CardText>{vehicle.description}</CardText>
                         <button
                           type="button"
                           onClick={handleDetail.bind(this, vehicle.id)}

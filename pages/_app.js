@@ -10,6 +10,7 @@ import "../styles/globals.css";
 import "../styles/index.css";
 import "../styles/auth.css";
 import "../styles/sidebar.css";
+import "../styles/timeline.css";
 
 // utils parsing JWT
 import { parseJWT } from "../utils/parseJWT";

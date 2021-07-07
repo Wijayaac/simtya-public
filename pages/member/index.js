@@ -15,7 +15,6 @@ export async function getServerSideProps(ctx) {
   };
 }
 export default function Dashboard(props) {
-  console.log(props);
   return (
     <>
       <div className="absolute top-0 bottom-0 d-flex flex-nowrap">

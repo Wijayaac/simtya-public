@@ -24,7 +24,7 @@ export async function getServerSideProps(ctx) {
     }
   );
   const pickup = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/pickup`,
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/pickuplist`,
     {
       headers: {
         Authorization: token,
@@ -49,7 +49,6 @@ export default function Pickup(props) {
   const [start, setStart] = useState(false);
   const [end, setEnd] = useState(false);
   const [route, setRoute] = useState([]);
-  const [description, setDescription] = useState([]);
   useEffect(() => {
     setLoading(false);
   }, []);
@@ -86,7 +85,6 @@ export default function Pickup(props) {
           start_at: start,
           vehicle: select,
           end_at: end,
-          description: description,
         },
         {
           headers: {
@@ -172,18 +170,6 @@ export default function Pickup(props) {
                 </div>
               </div>
             </div>
-            <div className="mb-3">
-              <label htmlFor="inputDescription" className="form-label">
-                Decription
-              </label>
-              <textarea
-                onChange={(e) => {
-                  setDescription(e.target.value);
-                }}
-                className="form-control"
-                id="inputDescription"
-                placeholder="any notes for the driver"></textarea>
-            </div>
             <div className="d-flex justify-content-end">
               <button
                 className="btn btn-primary"
@@ -213,7 +199,6 @@ export default function Pickup(props) {
                 <th>End At</th>
                 <th>Route</th>
                 <th>Status</th>
-                <th>Description</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -221,12 +206,11 @@ export default function Pickup(props) {
               {pickup.map((item) => {
                 return (
                   <tr key={item.id}>
-                    <td>{item.id_vehicle === id[0] ? name[0] : "kosong"}</td>
+                    <td>{item.name}</td>
                     <td>{moment(item.start_at).format("DD MMMM ,HH:mm")}</td>
                     <td>{moment(item.end_at).format("HH:mm")}</td>
                     <td>{item.route}</td>
                     <td>{item.ready === false ? "Pending" : "Ready"}</td>
-                    <td>{item.description}</td>
                     <td>
                       <button
                         className="btn btn-warning me-1"

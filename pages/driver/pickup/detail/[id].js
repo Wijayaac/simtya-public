@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import router from "next/router";
 import axios from "axios";
 import moment from "moment";
+import { ButtonGroup, Button } from "reactstrap";
 
 // utils auth library
-import { HandleAdminSSR } from "../../../../utils/auth";
+import { HandleDriverSSR } from "../../../../utils/auth";
 
 // import loading placeholder
 import ArticlePlaceholder from "../../../../components/Skeleton/ArticlePlaceholder";
@@ -13,42 +14,39 @@ import ArticlePlaceholder from "../../../../components/Skeleton/ArticlePlacehold
 import Admin from "../../../../layouts/Admin";
 
 export async function getServerSideProps(ctx) {
-  const token = await HandleAdminSSR(ctx);
+  const token = await HandleDriverSSR(ctx);
 
   const { id } = ctx.query;
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/admin/pickuphistory/${id}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/driver/pickuphistory/${id}`;
   const pickup = await axios.get(url, {
     headers: {
       Authorization: token,
     },
   });
-  const vehicle = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/vehicle/car`,
-    {
-      headers: {
-        Authorization: token,
-      },
-    }
-  );
+
   return {
     props: {
       token: token,
       pickup: pickup.data,
-      vehicle: vehicle.data.data,
     },
   };
 }
 
-export default function PickupEdit(props) {
-  const { vehicle } = props;
+export default function PickupDriverEdit(props) {
   const { pickup } = props.pickup;
   const { history } = props.pickup;
   const { token } = props;
+
   const id = pickup[0].id;
-  const [route, setRoute] = useState(pickup[0].route);
-  const [start, setStart] = useState(pickup[0].start_at);
-  const [end, setEnd] = useState(pickup[0].end_at);
-  const [select, setSelect] = useState(pickup[0].name);
+  const name = pickup[0].name;
+  const route = pickup[0].route;
+  const start = pickup[0].start;
+
+  const [description, setDescription] = useState(pickup[0].description);
+  const [startKm, setStartKm] = useState(pickup[0].start_km);
+  const [endKm, setEndKm] = useState(pickup[0].end_km);
+  const [ready, setReady] = useState(pickup[0].ready);
+  const [accidents, setAccidents] = useState(pickup[0].accidents);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -58,16 +56,17 @@ export default function PickupEdit(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/admin/pickup`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/driver/pickup`;
     axios
       .put(
         url,
         {
           id: id,
-          route: route,
-          start_at: start,
-          end_at: end,
-          id_vehicle: select,
+          description: description,
+          start_km: startKm,
+          end_km: endKm,
+          ready: ready,
+          accidents: accidents,
         },
         {
           headers: {
@@ -79,12 +78,12 @@ export default function PickupEdit(props) {
       )
       .then(() => {
         setLoading(false);
-        router.push("/admin/pickup");
+        router.push("/driver/pickup");
       })
       .catch((error) => console.log("Error updating pickup schedule", error));
   };
   const handleBack = () => {
-    router.push("/admin/pickup");
+    router.push("/driver/pickup");
   };
   return (
     <>
@@ -109,66 +108,81 @@ export default function PickupEdit(props) {
                 </label>
                 <select
                   id="selectVehicle"
-                  onChange={(e) => {
-                    setSelect(e.target.value);
-                  }}
+                  disabled
                   className="form-select"
                   aria-label="select vehicle">
-                  <option value={pickup[0].id_vehicle}>
-                    {select ? select : "Select one vehicle"}
-                  </option>
-                  {vehicle.map((item) => {
-                    return (
-                      <option
-                        key={item.id}
-                        className="text-capitalize"
-                        value={item.id}>
-                        {item.name !== select ? item.name : "---------"}
-                      </option>
-                    );
-                  })}
+                  <option>{name}</option>
                 </select>
               </div>
               <div className="mb-3">
-                <label htmlFor="inputRoute" className="form-label">
-                  Route
+                <label className="form-label d-block">Accidents</label>
+                <ButtonGroup>
+                  <Button
+                    color="outline-success"
+                    onClick={() => setAccidents(true)}
+                    active={accidents}>
+                    Yes
+                  </Button>
+                  <Button
+                    color="outline-danger"
+                    onClick={() => setAccidents(false)}
+                    active={!accidents}>
+                    No
+                  </Button>
+                </ButtonGroup>
+                <p>
+                  {accidents === true
+                    ? "Add your accidents into description bellow"
+                    : ""}
+                </p>
+                <label htmlFor="inputDescription" className="form-label">
+                  Description
                 </label>
-                <input
-                  defaultValue={route}
-                  onChange={(e) => setRoute(e.target.value)}
-                  type="text"
+                <textarea
+                  defaultValue={description}
+                  onChange={(e) => setDescription(e.target.value)}
                   className="form-control"
-                  id="inputRoute"
-                  placeholder="Pickup at PNB"
-                />
+                  id="inputDescription"
+                  placeholder="Add if you have accidents"></textarea>
               </div>
               <div className="mb-3">
                 <label htmlFor="inputSchedule" className="form-label">
-                  Pickup Schedule
+                  Ready for Pickup ?
+                </label>
+                <Button
+                  block
+                  className="d-block mb-2"
+                  color="outline-info"
+                  onClick={() => setReady(true)}
+                  active={ready}>
+                  Ready
+                </Button>
+                <label htmlFor="inputSchedule" className="form-label">
+                  Vehicle Details
                 </label>
                 <div className="row row-cols-md-2">
                   <div className="col">
                     <label
                       htmlFor="inputSchedule"
                       className="form-label d-block">
-                      Start Time
+                      Start Kilometers
                     </label>
                     <input
-                      defaultValue={moment(start).format("YYYY-MM-DDTHH:mm")}
-                      type="datetime-local"
-                      onChange={(e) => setStart(e.target.value)}
+                      defaultValue={startKm}
+                      type="number"
+                      onChange={(e) => setStartKm(e.target.value)}
                     />
                   </div>
                   <div className="col">
                     <label
                       htmlFor="inputSchedule"
                       className="form-label d-block">
-                      End Time
+                      End Kilometers
                     </label>
                     <input
-                      defaultValue={moment(end).format("YYYY-MM-DDTHH:mm")}
-                      type="datetime-local"
-                      onChange={(e) => setEnd(e.target.value)}
+                      defaultValue={endKm}
+                      type="number"
+                      onChange={(e) => setEndKm(e.target.value)}
                     />
                   </div>
                 </div>
@@ -184,7 +198,7 @@ export default function PickupEdit(props) {
                       role="status"
                       aria-hidden="true"></span>
                   )}
-                  {!isLoading && <span>Submit</span>}
+                  {!isLoading && <span>Save</span>}
                 </button>
                 <button type="reset" className="btn btn-outline-dark mx-2">
                   Clear
@@ -219,14 +233,11 @@ export default function PickupEdit(props) {
                 <li
                   className="event"
                   data-date={moment(start).format("H:mm a")}>
-                  <h3
-                    className={
-                      pickup[0].ready ? "text-success" : "text-warning"
-                    }>
-                    {pickup[0].ready ? "Ready" : "Pending"}
+                  <h3 className={ready ? "text-success" : "text-warning"}>
+                    {ready ? "Ready" : "Pending"}
                   </h3>
                   <p>{route}</p>
-                  <span className="text-muted">{pickup[0].description}</span>
+                  <span className="text-muted">{description}</span>
                 </li>
               </ul>
             </div>
@@ -237,4 +248,4 @@ export default function PickupEdit(props) {
   );
 }
 
-PickupEdit.layout = Admin;
+PickupDriverEdit.layout = Admin;
