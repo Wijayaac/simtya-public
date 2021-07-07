@@ -4,6 +4,15 @@ import moment from "moment";
 import router from "next/router";
 
 import FadeIn from "react-fade-in/lib/FadeIn";
+import { format } from "date-fns";
+import {
+  WeeklyCalendar,
+  WeeklyBody,
+  WeeklyDays,
+  WeeklyContainer,
+  WeeklyResponsiveContainer,
+  DefaultWeeklyEventItem,
+} from "@zach.codes/react-calendar";
 
 // Components UI
 import TableExample from "../../../components/Tables/table";
@@ -105,6 +114,7 @@ export default function Loan(props) {
       <div className="container">
         <div className="text-center fs-2 fw-bold">
           <p>Loan List</p>
+          <div className="container"></div>
         </div>
         <Modal buttonLabel="Loan Motorcycle" className="my-2">
           <form onSubmit={handleSubmit}>
@@ -193,14 +203,14 @@ export default function Loan(props) {
             </div>
           </form>
         </Modal>
-        <div className="container mt-5">
+        <div className="container mt-5 row row-cols-md-2">
           {isLoading && (
             <FadeIn>
               <ArticlePlaceholder />
             </FadeIn>
           )}
           {!isLoading && (
-            <div className="my-2">
+            <div className="my-2 col-6">
               <TableExample>
                 <thead>
                   <tr>
@@ -208,8 +218,6 @@ export default function Loan(props) {
                     <th>Purpose</th>
                     <th>Start At</th>
                     <th>End At</th>
-                    <th>Accidents</th>
-                    <th>Description</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -223,10 +231,6 @@ export default function Loan(props) {
                         <td>{item.purpose}</td>
                         <td>{moment(item.start_at).format("DD MMMM")}</td>
                         <td>{moment(item.end_at).format("DD MMMM")}</td>
-                        <td>
-                          {item.accidents === false ? "Normal" : "Kecelakaan"}
-                        </td>
-                        <td>{item.description}</td>
                         <td>
                           <button
                             className="btn btn-warning me-1"
@@ -246,6 +250,28 @@ export default function Loan(props) {
               </TableExample>
             </div>
           )}
+          <div className="col-6 mt-n3">
+            <WeeklyCalendar week={new Date()}>
+              <p className="fs-4 text-center">Booking List</p>
+              <WeeklyContainer>
+                <WeeklyDays />
+                <WeeklyBody
+                  events={[{ title: "Jane doe", date: new Date() }]}
+                  renderItem={({ item, showingFullWeek }) => (
+                    <DefaultWeeklyEventItem
+                      key={item.date.toISOString()}
+                      title={item.title}
+                      date={
+                        showingFullWeek
+                          ? format(item.date, "MMM do k:mm")
+                          : format(item.date, "k:mm")
+                      }
+                    />
+                  )}
+                />
+              </WeeklyContainer>
+            </WeeklyCalendar>
+          </div>
         </div>
       </div>
     </>

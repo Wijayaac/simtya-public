@@ -11,6 +11,7 @@ import "../styles/index.css";
 import "../styles/auth.css";
 import "../styles/sidebar.css";
 import "../styles/timeline.css";
+import "@zach.codes/react-calendar/dist/calendar-tailwind.css";
 
 // utils parsing JWT
 import { parseJWT } from "../utils/parseJWT";
