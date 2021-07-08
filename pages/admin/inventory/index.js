@@ -45,6 +45,7 @@ export default function Inventory(props) {
     { id: 4 },
   ]);
   const [isLoading, setLoading] = useState(true);
+  const [searchTerms, setSearchTerms] = useState("");
 
   useEffect(() => {
     axios
@@ -124,6 +125,14 @@ export default function Inventory(props) {
       <div className="container">
         <div className="text-center fs-2 fw-bold">
           <p>Inventory List</p>
+        </div>
+        <div className="d flex d-flex-column justify-content-end">
+          <input
+            className="p-2 border border-dark rounded"
+            type="search"
+            placeholder="Search vehicle name"
+            onChange={(e) => setSearchTerms(e.target.value)}
+          />
         </div>
         <Modal buttonLabel="Add Inventory" className="my-2">
           <form onSubmit={handleSubmit}>
@@ -254,39 +263,51 @@ export default function Inventory(props) {
         {!isLoading && (
           <FadeIn>
             <div className="row row-cols-md-4 row-col-lg-5">
-              {data.map((vehicle) => {
-                return (
-                  <div key={vehicle.id} className="col">
-                    <Card className="mt-5">
-                      <CardImg
-                        width="100px"
-                        src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${vehicle.photo}`}
-                        alt="Card image cap"
-                      />
-                      <CardBody>
-                        <CardTitle tag="h5">{vehicle.name}</CardTitle>
-                        <CardSubtitle tag="h6" className="mb-3 text-muted">
-                          {vehicle.type}
-                        </CardSubtitle>
-                        <button
-                          type="button"
-                          onClick={handleDetail.bind(this, vehicle.id)}
-                          className="btn btn-warning mx-2">
-                          <i className="bi bi-pencil me-1"></i>
-                          Details
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleDelete.bind(this, vehicle.id)}
-                          className="btn btn-danger mx-2">
-                          <i className="bi bi-trash me-1"></i>
-                          Delete
-                        </button>
-                      </CardBody>
-                    </Card>
-                  </div>
-                );
-              })}
+              {data
+                .filter((vehicle) => {
+                  if (searchTerms === "") {
+                    return vehicle;
+                  } else if (
+                    vehicle.name
+                      .toLowerCase()
+                      .includes(searchTerms.toLowerCase())
+                  ) {
+                    return vehicle;
+                  }
+                })
+                .map((vehicle) => {
+                  return (
+                    <div key={vehicle.id} className="col">
+                      <Card className="mt-5">
+                        <CardImg
+                          width="100px"
+                          src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${vehicle.photo}`}
+                          alt="Card image cap"
+                        />
+                        <CardBody>
+                          <CardTitle tag="h5">{vehicle.name}</CardTitle>
+                          <CardSubtitle tag="h6" className="mb-3 text-muted">
+                            {vehicle.type}
+                          </CardSubtitle>
+                          <button
+                            type="button"
+                            onClick={handleDetail.bind(this, vehicle.id)}
+                            className="btn btn-warning mx-2">
+                            <i className="bi bi-pencil me-1"></i>
+                            Details
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleDelete.bind(this, vehicle.id)}
+                            className="btn btn-danger mx-2">
+                            <i className="bi bi-trash me-1"></i>
+                            Delete
+                          </button>
+                        </CardBody>
+                      </Card>
+                    </div>
+                  );
+                })}
             </div>
           </FadeIn>
         )}

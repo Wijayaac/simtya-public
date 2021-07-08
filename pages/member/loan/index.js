@@ -4,7 +4,6 @@ import moment from "moment";
 import router from "next/router";
 
 import FadeIn from "react-fade-in/lib/FadeIn";
-import { format } from "date-fns";
 import {
   WeeklyCalendar,
   WeeklyBody,
@@ -42,7 +41,8 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       token: token,
-      events: event.data.data,
+      eventService: event.data.service,
+      eventLoan: event.data.loan,
       loan: loan.data.data,
       vehicle: vehicle.data.data,
     },
@@ -52,19 +52,25 @@ export default function Loan(props) {
   const { token } = props;
   const { sub } = parseJWT(token);
   const { vehicle } = props;
-  const { events } = props;
-
+  const { eventService } = props;
+  const { eventLoan } = props;
   const { loan } = props;
+
   const [select, setSelect] = useState([]);
   const [purpose, setPurpose] = useState([]);
   const [start, setStart] = useState(false);
   const [end, setEnd] = useState(false);
   const [description, setDescription] = useState([]);
+  const [searchTerms, setSearchTerms] = useState("");
   const [isLoading, setLoading] = useState(true);
 
-  let event = events.map((item) => {
+  let services = eventService.map((item) => {
     return { name: item.name, date: moment(item.start_at)._d };
   });
+  let loans = eventLoan.map((item) => {
+    return { name: item.name, date: moment(item.start_at)._d };
+  });
+  let events = services.concat(loans);
   useEffect(() => {
     setLoading(false);
   }, []);
@@ -223,6 +229,12 @@ export default function Loan(props) {
           )}
           {!isLoading && (
             <div className="my-2 col-6">
+              <input
+                className="p-2 border border-dark rounded"
+                type="search"
+                placeholder="Search vehicle name"
+                onChange={(e) => setSearchTerms(e.target.value)}
+              />
               <TableExample>
                 <thead>
                   <tr>
@@ -234,28 +246,40 @@ export default function Loan(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {loan.map((item) => {
-                    return (
-                      <tr key={item.id}>
-                        <td>{item.name}</td>
-                        <td>{item.purpose}</td>
-                        <td>{moment(item.start_at).format("DD MMMM")}</td>
-                        <td>{moment(item.end_at).format("DD MMMM")}</td>
-                        <td>
-                          <button
-                            className="btn btn-warning me-1"
-                            onClick={handleDetail.bind(this, item.id)}>
-                            <i className="bi bi-eye"></i>
-                          </button>
-                          <button
-                            className="btn btn-danger ms-1"
-                            onClick={handleDelete.bind(this, item.id)}>
-                            <i className="bi bi-trash"></i>
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {loan
+                    .filter((item) => {
+                      if (searchTerms === "") {
+                        return item;
+                      } else if (
+                        item.name
+                          .toLowerCase()
+                          .includes(searchTerms.toLowerCase())
+                      ) {
+                        return item;
+                      }
+                    })
+                    .map((item) => {
+                      return (
+                        <tr key={item.id}>
+                          <td>{item.name}</td>
+                          <td>{item.purpose}</td>
+                          <td>{moment(item.start_at).format("DD MMMM")}</td>
+                          <td>{moment(item.end_at).format("DD MMMM")}</td>
+                          <td>
+                            <button
+                              className="btn btn-warning me-1"
+                              onClick={handleDetail.bind(this, item.id)}>
+                              <i className="bi bi-eye"></i>
+                            </button>
+                            <button
+                              className="btn btn-danger ms-1"
+                              onClick={handleDelete.bind(this, item.id)}>
+                              <i className="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </TableExample>
             </div>
@@ -266,10 +290,11 @@ export default function Loan(props) {
               <WeeklyContainer>
                 <WeeklyDays />
                 <WeeklyBody
-                  events={event}
+                  style={{ width: "60%" }}
+                  events={events}
                   renderItem={({ item, showingFullWeek }) => (
                     <DefaultWeeklyEventItem
-                      key={toString(item.date)}
+                      key={Math.random()}
                       title={item.name}
                       date={
                         showingFullWeek

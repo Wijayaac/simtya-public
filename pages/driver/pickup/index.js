@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import router from "next/router";
 import moment from "moment";
@@ -32,6 +32,7 @@ export async function getServerSideProps(ctx) {
 export default function Pickup(props) {
   const { token } = props;
   const { pickup } = props;
+  const [searchTerms, setSearchTerms] = useState("");
 
   const handleUpdate = (id) => {
     router.push(`/driver/pickup/detail/${id}`);
@@ -42,38 +43,56 @@ export default function Pickup(props) {
         <div className="text-center fs-3 fw-bold">
           <p>Pickup List</p>
         </div>
-        <TableExample>
-          <thead>
-            <tr>
-              <th>Vehicle</th>
-              <th>Pickup At</th>
-              <th>End At</th>
-              <th>Route</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pickup.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td>{item.name}</td>
-                  <td>{moment(item.start_at).format("DD MMMM ,HH:mm")}</td>
-                  <td>{moment(item.end_at).format("HH:mm")}</td>
-                  <td>{item.route}</td>
-                  <td>{item.ready === false ? "Pending" : "Ready"}</td>
-                  <td>
-                    <button
-                      className="btn btn-warning me-1"
-                      onClick={handleUpdate.bind(this, item.id)}>
-                      <i className="bi bi-eye"></i>
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </TableExample>
+        <div className="container mt-5">
+          <input
+            className="p-2 border border-dark rounded"
+            type="search"
+            placeholder="Search vehicle name"
+            onChange={(e) => setSearchTerms(e.target.value)}
+          />
+          <TableExample>
+            <thead>
+              <tr>
+                <th>Vehicle</th>
+                <th>Pickup At</th>
+                <th>End At</th>
+                <th>Route</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pickup
+                .filter((item) => {
+                  if (searchTerms === "") {
+                    return item;
+                  } else if (
+                    item.name.toLowerCase().includes(searchTerms.toLowerCase())
+                  ) {
+                    return item;
+                  }
+                })
+                .map((item) => {
+                  return (
+                    <tr key={item.id}>
+                      <td>{item.name}</td>
+                      <td>{moment(item.start_at).format("DD MMMM ,HH:mm")}</td>
+                      <td>{moment(item.end_at).format("HH:mm")}</td>
+                      <td>{item.route}</td>
+                      <td>{item.ready === false ? "Pending" : "Ready"}</td>
+                      <td>
+                        <button
+                          className="btn btn-warning me-1"
+                          onClick={handleUpdate.bind(this, item.id)}>
+                          <i className="bi bi-eye"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </TableExample>
+        </div>
       </div>
     </>
   );

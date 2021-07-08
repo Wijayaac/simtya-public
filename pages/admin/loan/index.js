@@ -34,6 +34,7 @@ export default function Loan(props) {
   const { token } = props;
   const { loan } = props;
 
+  const [searchTerms, setSearchTerms] = useState("");
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(false);
@@ -46,6 +47,14 @@ export default function Loan(props) {
       <div className="container px-5">
         <div className="text-center fs-3 fw-bold">
           <p>Loan List</p>
+        </div>
+        <div className="d-flex d-flex-column justify-content-end">
+          <input
+            className="p-2 border border-dark rounded"
+            type="search"
+            placeholder="Search vehicle name"
+            onChange={(e) => setSearchTerms(e.target.value)}
+          />
         </div>
         <TableExample>
           <thead>
@@ -61,28 +70,43 @@ export default function Loan(props) {
           <tbody>
             {isLoading && <ArticlePlaceholder />}
             {!isLoading &&
-              loan.map((item) => {
-                return (
-                  <tr key={item.id}>
-                    <td>{item.name}</td>
-                    <td>{item.username ? item.username : item.email}</td>
-                    <td>
-                      {moment.utc(item.start_at).local().format("DD MMM,YY")}
-                    </td>
-                    <td>
-                      {moment.utc(item.end_at).local().format("DD MMM,YY")}
-                    </td>
-                    <td>{item.accidents ? "Kecelakaan" : "Normal"}</td>
-                    <td>
-                      <button
-                        className="btn btn-warning me-1"
-                        onClick={handleDetail.bind(this, item.id)}>
-                        <i className="bi bi-eye"></i>
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+              loan
+                .filter((item) => {
+                  if (searchTerms === "") {
+                    return item;
+                  } else if (
+                    item.name
+                      .toLowerCase()
+                      .includes(searchTerms.toLowerCase()) ||
+                    item.username
+                      .toLowerCase()
+                      .includes(searchTerms.toLowerCase())
+                  ) {
+                    return item;
+                  }
+                })
+                .map((item) => {
+                  return (
+                    <tr key={item.id}>
+                      <td>{item.name}</td>
+                      <td>{item.username ? item.username : item.email}</td>
+                      <td>
+                        {moment.utc(item.start_at).local().format("DD MMM,YY")}
+                      </td>
+                      <td>
+                        {moment.utc(item.end_at).local().format("DD MMM,YY")}
+                      </td>
+                      <td>{item.accidents ? "Kecelakaan" : "Normal"}</td>
+                      <td>
+                        <button
+                          className="btn btn-warning me-1"
+                          onClick={handleDetail.bind(this, item.id)}>
+                          <i className="bi bi-eye"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
           </tbody>
         </TableExample>
       </div>

@@ -34,7 +34,9 @@ export async function getServerSideProps(ctx) {
 export default function Pickup(props) {
   const { token } = props;
   const { pickup } = props;
+
   const [join, setJoin] = useState(null);
+  const [searchTerms, setSearchTerms] = useState("");
   const { sub } = parseJWT(token);
 
   useEffect(() => {
@@ -86,6 +88,14 @@ export default function Pickup(props) {
         <div className="text-center fs-3 fw-bold">
           <p>Pickup List</p>
         </div>
+        <div className="d-flex d-flex-column justify-content-end">
+          <input
+            className="p-2 border border-dark rounded"
+            type="search"
+            placeholder="Search vehicle name"
+            onChange={(e) => setSearchTerms(e.target.value)}
+          />
+        </div>
         <TableExample>
           <thead>
             <tr>
@@ -98,31 +108,41 @@ export default function Pickup(props) {
             </tr>
           </thead>
           <tbody>
-            {pickup.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td>{item.name}</td>
-                  <td>{moment(item.start_at).format("DD MMMM ,HH:mm")}</td>
-                  <td>{moment(item.end_at).format("HH:mm")}</td>
-                  <td>{item.route}</td>
-                  <td>{item.slot < 1 ? "Full" : item.slot}</td>
-                  {item.slot < 1 ? (
-                    <td>Wait pickup time</td>
-                  ) : (
-                    <td>
-                      {join && "Wait pickup time"}
-                      {!join && (
-                        <button
-                          className="btn btn-warning me-1"
-                          onClick={handleJoin.bind(this, item.id)}>
-                          <i className="bi bi-box-arrow-in-right"></i> Join
-                        </button>
-                      )}
-                    </td>
-                  )}
-                </tr>
-              );
-            })}
+            {pickup
+              .filter((item) => {
+                if (searchTerms === "") {
+                  return item;
+                } else if (
+                  item.name.toLowerCase().includes(searchTerms.toLowerCase())
+                ) {
+                  return item;
+                }
+              })
+              .map((item) => {
+                return (
+                  <tr key={item.id}>
+                    <td>{item.name}</td>
+                    <td>{moment(item.start_at).format("DD MMMM ,HH:mm")}</td>
+                    <td>{moment(item.end_at).format("HH:mm")}</td>
+                    <td>{item.route}</td>
+                    <td>{item.slot < 1 ? "Full" : item.slot}</td>
+                    {item.slot < 1 ? (
+                      <td>Wait pickup time</td>
+                    ) : (
+                      <td>
+                        {join && "Wait pickup time"}
+                        {!join && (
+                          <button
+                            className="btn btn-warning me-1"
+                            onClick={handleJoin.bind(this, item.id)}>
+                            <i className="bi bi-box-arrow-in-right"></i> Join
+                          </button>
+                        )}
+                      </td>
+                    )}
+                  </tr>
+                );
+              })}
           </tbody>
         </TableExample>
       </div>

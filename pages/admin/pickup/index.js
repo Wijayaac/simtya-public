@@ -43,12 +43,15 @@ export default function Pickup(props) {
   const { token } = props;
   const { vehicle } = props;
   const { pickup } = props;
+
   const [data, setData] = useState(vehicle);
   const [isLoading, setLoading] = useState(true);
   const [select, setSelect] = useState([]);
   const [start, setStart] = useState(false);
   const [end, setEnd] = useState(false);
   const [route, setRoute] = useState([]);
+  const [searchTerms, setSearchTerms] = useState("");
+
   useEffect(() => {
     setLoading(false);
   }, []);
@@ -106,6 +109,14 @@ export default function Pickup(props) {
       <div className="container px-5">
         <div className="text-center fs-3 fw-bold">
           <p>Pickup List</p>
+        </div>
+        <div className="d-flex d-flex-column justify-content-end">
+          <input
+            className="p-2 border border-dark rounded"
+            type="search"
+            placeholder="Search vehicle name"
+            onChange={(e) => setSearchTerms(e.target.value)}
+          />
         </div>
         <Modal className="my-2" size="lg" buttonLabel="Add Pickup Schedule">
           <form onSubmit={handleSubmit}>
@@ -203,29 +214,39 @@ export default function Pickup(props) {
               </tr>
             </thead>
             <tbody>
-              {pickup.map((item) => {
-                return (
-                  <tr key={item.id}>
-                    <td>{item.name}</td>
-                    <td>{moment(item.start_at).format("DD MMMM ,HH:mm")}</td>
-                    <td>{moment(item.end_at).format("HH:mm")}</td>
-                    <td>{item.route}</td>
-                    <td>{item.ready === false ? "Pending" : "Ready"}</td>
-                    <td>
-                      <button
-                        className="btn btn-warning me-1"
-                        onClick={handleDetail.bind(this, item.id)}>
-                        <i className="bi bi-eye"></i>
-                      </button>
-                      <button
-                        className="btn btn-danger ms-1"
-                        onClick={handleDelete.bind(this, item.id)}>
-                        <i className="bi bi-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+              {pickup
+                .filter((item) => {
+                  if (searchTerms === "") {
+                    return item;
+                  } else if (
+                    item.name.toLowerCase().includes(searchTerms.toLowerCase())
+                  ) {
+                    return item;
+                  }
+                })
+                .map((item) => {
+                  return (
+                    <tr key={item.id}>
+                      <td>{item.name}</td>
+                      <td>{moment(item.start_at).format("DD MMMM ,HH:mm")}</td>
+                      <td>{moment(item.end_at).format("HH:mm")}</td>
+                      <td>{item.route}</td>
+                      <td>{item.ready === false ? "Pending" : "Ready"}</td>
+                      <td>
+                        <button
+                          className="btn btn-warning me-1"
+                          onClick={handleDetail.bind(this, item.id)}>
+                          <i className="bi bi-eye"></i>
+                        </button>
+                        <button
+                          className="btn btn-danger ms-1"
+                          onClick={handleDelete.bind(this, item.id)}>
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </TableExample>
         </div>

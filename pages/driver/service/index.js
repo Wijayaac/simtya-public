@@ -3,13 +3,20 @@ import router from "next/router";
 import axios from "axios";
 import moment from "moment";
 
+import FadeIn from "react-fade-in/lib/FadeIn";
+import {
+  WeeklyCalendar,
+  WeeklyBody,
+  WeeklyDays,
+  WeeklyContainer,
+  DefaultWeeklyEventItem,
+} from "@zach.codes/react-calendar";
 // utils auth library
 import { HandleDriverSSR } from "../../../utils/auth";
 
 // Components UI
 import Modal from "../../../components/Modals/modal";
 import TableExample from "../../../components/Tables/table";
-import FadeIn from "react-fade-in/lib/FadeIn";
 import ArticlePlaceholder from "../../../components/Skeleton/ArticlePlaceholder";
 // Layout Component
 import Admin from "../../../layouts/Admin";
@@ -33,10 +40,16 @@ export async function getServerSideProps(ctx) {
       },
     }
   );
+  const event = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/member/event/`,
+    { headers: { Authorization: token } }
+  );
 
   return {
     props: {
       token: token,
+      eventService: event.data.service,
+      eventLoan: event.data.loan,
       service: service.data.data,
       vehicle: vehicle.data.data,
     },
@@ -47,15 +60,24 @@ export default function Service(props) {
   const { token } = props;
   const { vehicle } = props;
   const { service } = props;
+  const { eventService } = props;
+  const { eventLoan } = props;
+
   const [isLoading, setLoading] = useState(true);
   const [select, setSelect] = useState([]);
   const [start, setStart] = useState(false);
   const [end, setEnd] = useState(false);
   const [description, setDescription] = useState([]);
   const [type, setType] = useState([]);
+  const [searchTerms, setSearchTerms] = useState("");
 
-  let id = vehicle.map(({ id }) => id);
-  let name = vehicle.map(({ name }) => name);
+  let services = eventService.map((item) => {
+    return { name: item.name, date: moment(item.start_at)._d };
+  });
+  let loans = eventLoan.map((item) => {
+    return { name: item.name, date: moment(item.start_at)._d };
+  });
+  let events = services.concat(loans);
 
   useEffect(() => {
     setLoading(false);
@@ -76,8 +98,8 @@ export default function Service(props) {
         },
       })
       .then(() => {
-        setLoading(false);
         router.reload();
+        setLoading(false);
       })
       .catch((error) => console.log("Error deleting data", error));
   };
@@ -103,9 +125,13 @@ export default function Service(props) {
           },
         }
       )
-      .then(() => {
+      .then(({ data }) => {
+        if (!data) {
+          alert("Motorcycle on book, pick another day or motorcycle");
+        } else {
+          router.reload();
+        }
         setLoading(false);
-        router.reload();
       })
       .catch((error) => console.log("Error inserting service schedule", error));
   };
@@ -194,61 +220,95 @@ export default function Service(props) {
             </div>
           </form>
         </Modal>
-        <div className="container mt-5">
+        <div className="container mt-5 row row-cols-md-2">
           {isLoading && (
             <FadeIn>
               <ArticlePlaceholder />
             </FadeIn>
           )}
           {!isLoading && (
-            <TableExample>
-              <thead>
-                <tr>
-                  <th>Vehicle</th>
-                  <th>Service At</th>
-                  <th>End At</th>
-                  <th>Type</th>
-                  {/* <th>Status</th> */}
-                  <th>Description</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {service.map((item) => {
-                  console.log(item.id_vehicle);
-                  return (
-                    <tr key={item.id}>
-                      <td>{item.id_vehicle === id[0] ? name[0] : "kosong"}</td>
-                      <td>
-                        {moment
-                          .utc(item.start_at)
-                          .local()
-                          .format("DD MMMM ,YYYY")}
-                      </td>
-                      <td>
-                        {moment.utc(item.end_at).local().format("DD MMMM")}
-                      </td>
-                      <td>{item.type}</td>
-                      {/* <td>{item.ready === false ? "Pending" : "Ready"}</td> */}
-                      <td>{item.description}</td>
-                      <td>
-                        <button
-                          className="btn btn-warning me-1"
-                          onClick={handleDetail.bind(this, item.id)}>
-                          <i className="bi bi-eye"></i>
-                        </button>
-                        <button
-                          className="btn btn-danger ms-1"
-                          onClick={handleDelete.bind(this, item.id)}>
-                          <i className="bi bi-trash"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </TableExample>
+            <div className="my-2 col-6">
+              <input
+                className="p-2 border border-dark rounded"
+                type="search"
+                placeholder="Search vehicle name"
+                onChange={(e) => setSearchTerms(e.target.value)}
+              />
+              <TableExample>
+                <thead>
+                  <tr>
+                    <th>Vehicle</th>
+                    <th>Type</th>
+                    <th>Service At</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {service
+                    .filter((item) => {
+                      if (searchTerms === "") {
+                        return item;
+                      } else if (
+                        item.name
+                          .toLowerCase()
+                          .includes(searchTerms.toLocaleLowerCase())
+                      ) {
+                        return item;
+                      }
+                    })
+                    .map((item) => {
+                      return (
+                        <tr key={item.id}>
+                          <td>{item.name}</td>
+                          <td>{item.type}</td>
+                          <td>
+                            {moment
+                              .utc(item.start_at)
+                              .local()
+                              .format("DD MMMM ,YYYY")}
+                          </td>
+                          <td>
+                            <button
+                              className="btn btn-warning me-1"
+                              onClick={handleDetail.bind(this, item.id)}>
+                              <i className="bi bi-eye"></i>
+                            </button>
+                            <button
+                              className="btn btn-danger ms-1"
+                              onClick={handleDelete.bind(this, item.id)}>
+                              <i className="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </TableExample>
+            </div>
           )}
+          <div className="col-6 mt-n3">
+            <WeeklyCalendar week={new Date()}>
+              <p className="fs-4 text-center">Booking List</p>
+              <WeeklyContainer>
+                <WeeklyDays />
+                <WeeklyBody
+                  style={{ width: "60%" }}
+                  events={events}
+                  renderItem={({ item, showingFullWeek }) => (
+                    <DefaultWeeklyEventItem
+                      key={Math.random()}
+                      title={item.name}
+                      date={
+                        showingFullWeek
+                          ? moment(item.date).format("MMM Do,YY")
+                          : moment(item.date).format("k:mm")
+                      }
+                    />
+                  )}
+                />
+              </WeeklyContainer>
+            </WeeklyCalendar>
+          </div>
         </div>
       </div>
     </>
