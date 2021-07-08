@@ -10,7 +10,6 @@ import {
   WeeklyBody,
   WeeklyDays,
   WeeklyContainer,
-  WeeklyResponsiveContainer,
   DefaultWeeklyEventItem,
 } from "@zach.codes/react-calendar";
 
@@ -26,18 +25,24 @@ import Admin from "../../../layouts/Admin";
 
 export async function getServerSideProps(ctx) {
   const token = await HandleMemberSSR(ctx);
+  const { sub } = parseJWT(token);
   const vehicle = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/admin/vehicle/motorcycle`,
     { headers: { Authorization: token } }
   );
 
   const loan = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/member/loan/`,
+    `${process.env.NEXT_PUBLIC_API_URL}/member/loanlist/${sub}`,
+    { headers: { Authorization: token } }
+  );
+  const event = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/member/event/`,
     { headers: { Authorization: token } }
   );
   return {
     props: {
       token: token,
+      events: event.data.data,
       loan: loan.data.data,
       vehicle: vehicle.data.data,
     },
@@ -47,6 +52,8 @@ export default function Loan(props) {
   const { token } = props;
   const { sub } = parseJWT(token);
   const { vehicle } = props;
+  const { events } = props;
+
   const { loan } = props;
   const [select, setSelect] = useState([]);
   const [purpose, setPurpose] = useState([]);
@@ -55,9 +62,9 @@ export default function Loan(props) {
   const [description, setDescription] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
-  let id = vehicle.map(({ id }) => id);
-  let name = vehicle.map(({ name }) => name);
-
+  let event = events.map((item) => {
+    return { name: item.name, date: moment(item.start_at)._d };
+  });
   useEffect(() => {
     setLoading(false);
   }, []);
@@ -86,9 +93,14 @@ export default function Loan(props) {
           },
         }
       )
-      .then(() => {
+      .then(({ data }) => {
+        // console.log(data);
+        if (!data) {
+          alert("Motorcycle already booked, pick another day or motorcycle");
+        } else {
+          router.reload();
+        }
         setLoading(false);
-        router.reload();
       })
       .catch((error) => console.log("Error insert new loan", error));
   };
@@ -101,8 +113,8 @@ export default function Loan(props) {
         },
       })
       .then(() => {
-        setLoading(false);
         router.reload();
+        setLoading(false);
       });
   };
   const handleDetail = (id) => {
@@ -225,9 +237,7 @@ export default function Loan(props) {
                   {loan.map((item) => {
                     return (
                       <tr key={item.id}>
-                        <td>
-                          {item.id_vehicle === id[0] ? name[0] : "kosong"}
-                        </td>
+                        <td>{item.name}</td>
                         <td>{item.purpose}</td>
                         <td>{moment(item.start_at).format("DD MMMM")}</td>
                         <td>{moment(item.end_at).format("DD MMMM")}</td>
@@ -256,15 +266,15 @@ export default function Loan(props) {
               <WeeklyContainer>
                 <WeeklyDays />
                 <WeeklyBody
-                  events={[{ title: "Jane doe", date: new Date() }]}
+                  events={event}
                   renderItem={({ item, showingFullWeek }) => (
                     <DefaultWeeklyEventItem
-                      key={item.date.toISOString()}
-                      title={item.title}
+                      key={toString(item.date)}
+                      title={item.name}
                       date={
                         showingFullWeek
-                          ? format(item.date, "MMM do k:mm")
-                          : format(item.date, "k:mm")
+                          ? moment(item.date).format("MMM Do,YY")
+                          : moment(item.date).format("k:mm")
                       }
                     />
                   )}

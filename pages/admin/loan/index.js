@@ -55,7 +55,6 @@ export default function Loan(props) {
               <th>Loan At</th>
               <th>End At</th>
               <th>Accidents</th>
-              <th>Description</th>
               <th>Details</th>
             </tr>
           </thead>
@@ -66,7 +65,7 @@ export default function Loan(props) {
                 return (
                   <tr key={item.id}>
                     <td>{item.name}</td>
-                    <td>{item.email}</td>
+                    <td>{item.username ? item.username : item.email}</td>
                     <td>
                       {moment.utc(item.start_at).local().format("DD MMM,YY")}
                     </td>
@@ -74,7 +73,6 @@ export default function Loan(props) {
                       {moment.utc(item.end_at).local().format("DD MMM,YY")}
                     </td>
                     <td>{item.accidents ? "Kecelakaan" : "Normal"}</td>
-                    <td>{item.description}</td>
                     <td>
                       <button
                         className="btn btn-warning me-1"

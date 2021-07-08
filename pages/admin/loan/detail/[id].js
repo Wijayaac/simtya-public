@@ -23,27 +23,26 @@ export async function getServerSideProps(ctx) {
       },
     }
   );
+  const history = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/loanhistory/${id}`,
+    {
+      headers: {
+        Authorization: token,
+      },
+    }
+  );
   return {
     props: {
       token: token,
       loan: loan.data.data,
+      history: history.data.history,
     },
   };
 }
 
 export default function LoanDetail(props) {
   const { loan } = props;
-
-  const customTheme = {
-    yearColor: "#405b73",
-    lineColor: "#d0cdc4",
-    dotColor: "#262626",
-    borderDotColor: "#d0cdc4",
-    titleColor: "#405b73",
-    subtitleColor: "#bf9765",
-    textColor: "#262626",
-  };
-
+  const { history } = props;
   const handleBack = () => {
     router.push("/admin/loan");
   };
@@ -53,7 +52,7 @@ export default function LoanDetail(props) {
         <div className="col-6">
           <div className="d-flex flex-row justify-content-between mt-3">
             <p className="fs-3 fw-bold">Details Loan</p>
-            <button className="btn btn-info">
+            <button onClick={() => handleBack()} className="btn btn-info">
               <i className="bi bi-arrow-left-circle"></i> Back to Loan
             </button>
           </div>
@@ -163,33 +162,37 @@ export default function LoanDetail(props) {
             style={{ height: "80vh" }}>
             <div id="content">
               <ul className="timeline ">
-                <li className="event" data-date="12:30 - 1:00pm">
-                  <h3>Registration</h3>
+                <li
+                  className="event"
+                  data-date={moment(history.start_at).format("DD,MMM, YYYY")}>
+                  <h3>{history.purpose}</h3>
                   <p>
-                    Get here on time, its first come first serve. Be late, get
-                    turned away.
-                  </p>
-                </li>
-                <li className="event" data-date="2:30 - 4:00pm">
-                  <h3>Opening Ceremony</h3>
-                  <p>
-                    Get ready for an exciting event, this will kick off in
-                    amazing fashion with MOP &amp; Busta Rhymes as an opening
-                    show.
-                  </p>
-                </li>
-                <li className="event" data-date="5:00 - 8:00pm">
-                  <h3>Main Event</h3>
-                  <p>
-                    This is where it all goes down. You will compete head to
-                    head with your friends and rivals. Get ready!
-                  </p>
-                </li>
-                <li className="event" data-date="8:30 - 9:30pm">
-                  <h3>Closing Ceremony</h3>
-                  <p>
-                    See how is the victor and who are the losers. The big stage
-                    is where the winners bask in their own glory.
+                    Person :
+                    {history.username ? history.username : history.email}
+                    <br />
+                    <br />
+                    <span>
+                      Kilometers: {history.start_km} - {history.end_km}
+                    </span>
+                    <br />
+                    <br />
+                    <span>
+                      Ends_at:{" "}
+                      {moment(history.end_at).format("DD MMM,YY H:mm A")}
+                    </span>
+                    <br />
+                    <br />
+                    Info :
+                    {history.accidents
+                      ? "(accidents)" + history.description
+                      : history.description}
+                    <br />
+                    <small className="text-muted">
+                      NOTE: description of events that occur from this vehicle
+                      loan, can be in the form of accidents, or incidents such
+                      as damage that occurs. You can view the report here and
+                      see in detail.
+                    </small>
                   </p>
                 </li>
               </ul>
