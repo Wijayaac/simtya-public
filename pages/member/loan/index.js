@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import moment from "moment";
 import router from "next/router";
+import ReactPaginate from "react-paginate";
 
 import FadeIn from "react-fade-in/lib/FadeIn";
 import {
@@ -24,6 +25,7 @@ import Admin from "../../../layouts/Admin";
 
 export async function getServerSideProps(ctx) {
   const token = await HandleMemberSSR(ctx);
+  const page = ctx.query.page || 1;
   const { sub } = parseJWT(token);
   const vehicle = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/admin/vehicle/motorcycle`,
@@ -31,7 +33,7 @@ export async function getServerSideProps(ctx) {
   );
 
   const loan = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/member/loanlist/${sub}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/member/loanlist/${sub}/${page}`,
     { headers: { Authorization: token } }
   );
   const event = await axios.get(
@@ -43,7 +45,7 @@ export async function getServerSideProps(ctx) {
       token: token,
       eventService: event.data.service,
       eventLoan: event.data.loan,
-      loan: loan.data.data,
+      loan: loan.data,
       vehicle: vehicle.data.data,
     },
   };
@@ -73,6 +75,9 @@ export default function Loan(props) {
   let events = services.concat(loans);
   useEffect(() => {
     setLoading(false);
+    return () => {
+      setLoading(false);
+    };
   }, []);
 
   const handleSubmit = (e) => {
@@ -100,7 +105,6 @@ export default function Loan(props) {
         }
       )
       .then(({ data }) => {
-        // console.log(data);
         if (!data) {
           alert("Motorcycle already booked, pick another day or motorcycle");
         } else {
@@ -109,6 +113,15 @@ export default function Loan(props) {
         setLoading(false);
       })
       .catch((error) => console.log("Error insert new loan", error));
+  };
+  const handlePagination = (page) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.page = page.selected + 1;
+    router.push({
+      pathname: path,
+      query: query,
+    });
   };
   const handleDelete = (id) => {
     setLoading(true);
@@ -246,7 +259,7 @@ export default function Loan(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {loan
+                  {loan.list
                     .filter((item) => {
                       if (searchTerms === "") {
                         return item;
@@ -282,6 +295,26 @@ export default function Loan(props) {
                     })}
                 </tbody>
               </TableExample>
+              <ReactPaginate
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                previousLabel={"previous"}
+                nextLabel={"next"}
+                breakLabel={"..."}
+                initialPage={loan.currentPage - 1}
+                pageCount={loan.maxPage}
+                onPageChange={handlePagination}
+                containerClassName={"pagination"}
+                pageClassName={"page-item"}
+                pageLinkClassName={"page-link"}
+                activeClassName={"active"}
+                nextClassName={"page-item"}
+                nextLinkClassName={"page-link"}
+                previousClassName={"page-item"}
+                previousLinkClassName={"page-link"}
+                breakClassName={"page-item"}
+                breakLinkClassName={"page-link"}
+              />
             </div>
           )}
           <div className="col-6 mt-n3">

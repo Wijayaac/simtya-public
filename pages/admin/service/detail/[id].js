@@ -15,8 +15,8 @@ import Admin from "../../../../layouts/Admin";
 export async function getServerSideProps(ctx) {
   const token = await HandleAdminSSR(ctx);
   const { id } = ctx.query;
-  const loan = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/loan/${id}`,
+  const service = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/servicedetail/${id}`,
     {
       headers: {
         Authorization: token,
@@ -24,7 +24,7 @@ export async function getServerSideProps(ctx) {
     }
   );
   const history = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/loanhistory/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/servicehistory/${id}`,
     {
       headers: {
         Authorization: token,
@@ -34,18 +34,18 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       token: token,
-      loan: loan.data.data,
+      service: service.data.data,
       history: history.data.history,
     },
   };
 }
 
-export default function LoanDetail(props) {
-  const { loan } = props;
+export default function ServiceDetail(props) {
+  const { service } = props;
 
   const { history } = props;
   const handleBack = () => {
-    router.push("/admin/loan");
+    router.push("/admin/service");
   };
   return (
     <>
@@ -65,7 +65,7 @@ export default function LoanDetail(props) {
                 </label>
                 <input
                   disabled
-                  defaultValue={loan[0].start_km}
+                  defaultValue={service[0].start_km}
                   type="number"
                   name="startKm"
                   className="form-control"
@@ -78,7 +78,7 @@ export default function LoanDetail(props) {
                 </label>
                 <input
                   disabled
-                  defaultValue={loan[0].end_km}
+                  defaultValue={service[0].end_km}
                   type="number"
                   name="endKm"
                   className="form-control"
@@ -92,7 +92,7 @@ export default function LoanDetail(props) {
               </label>
               <input
                 disabled
-                defaultValue={loan[0].name}
+                defaultValue={service[0].name}
                 type="text"
                 name="purpose"
                 className="form-control"
@@ -105,7 +105,7 @@ export default function LoanDetail(props) {
               </label>
               <input
                 disabled
-                defaultValue={loan[0].purpose}
+                defaultValue={service[0].type}
                 type="text"
                 name="purpose"
                 className="form-control"
@@ -118,7 +118,7 @@ export default function LoanDetail(props) {
               </label>
               <input
                 disabled
-                defaultValue={moment(loan[0].start_at).format("YYYY-MM-DD")}
+                defaultValue={moment(service[0].start_at).format("YYYY-MM-DD")}
                 type="date"
                 name="start_date"
                 className="form-control"
@@ -131,7 +131,7 @@ export default function LoanDetail(props) {
               </label>
               <input
                 disabled
-                defaultValue={moment(loan[0].end_at).format("YYYY-MM-DD")}
+                defaultValue={moment(service[0].end_at).format("YYYY-MM-DD")}
                 type="date"
                 name="end_date"
                 className="form-control"
@@ -144,7 +144,7 @@ export default function LoanDetail(props) {
               </label>
               <textarea
                 disabled
-                defaultValue={loan[0].description}
+                defaultValue={service[0].description}
                 name="description"
                 type="file"
                 className="form-control"
@@ -205,4 +205,4 @@ export default function LoanDetail(props) {
   );
 }
 
-LoanDetail.layout = Admin;
+ServiceDetail.layout = Admin;

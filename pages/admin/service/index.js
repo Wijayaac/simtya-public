@@ -6,9 +6,11 @@ import ReactPaginate from "react-paginate";
 
 // utils auth library
 import { HandleAdminSSR } from "../../../utils/auth";
+
 // Components
 import TableExample from "../../../components/Tables/table";
 import ArticlePlaceholder from "../../../components/Skeleton/ArticlePlaceholder";
+
 // Layout
 import Admin from "../../../layouts/Admin";
 
@@ -16,8 +18,8 @@ export async function getServerSideProps(ctx) {
   const token = await HandleAdminSSR(ctx);
   const page = ctx.query.page || 1;
 
-  const loan = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/loanlist/${page}`,
+  const service = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/service/${page}`,
     {
       headers: {
         Authorization: token,
@@ -27,22 +29,26 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       token: token,
-      loan: loan.data,
+      service: service.data,
     },
   };
 }
 
-export default function Loan(props) {
+export default function Service(props) {
   const { token } = props;
-  const { loan } = props;
+  const { service } = props;
 
   const [searchTerms, setSearchTerms] = useState("");
   const [isLoading, setLoading] = useState(true);
+
   useEffect(() => {
     setLoading(false);
+    return () => {
+      setLoading(false);
+    };
   }, []);
   const handleDetail = (id) => {
-    router.push(`/admin/loan/detail/${id}`);
+    router.push(`/admin/service/detail/${id}`);
   };
   const handlePagination = (page) => {
     const path = router.pathname;
@@ -57,41 +63,35 @@ export default function Loan(props) {
     <>
       <div className="container px-5">
         <div className="text-center fs-3 fw-bold">
-          <p>Loan List</p>
+          <p>Pickup List</p>
         </div>
         <div className="d-flex d-flex-column justify-content-end">
           <input
-            className="p-2 border border-dark rounded"
+            onChange={(e) => setSearchTerms(e.target.value)}
             type="search"
             placeholder="Search vehicle name"
-            onChange={(e) => setSearchTerms(e.target.value)}
+            className="p-2 border border-dark rounded"
           />
         </div>
         <TableExample>
           <thead>
             <tr>
               <th>Vehicle</th>
-              <th>User</th>
-              <th>Loan At</th>
+              <th>Type</th>
+              <th>Service At</th>
               <th>End At</th>
-              <th>Accidents</th>
-              <th>Details</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {isLoading && <ArticlePlaceholder />}
             {!isLoading &&
-              loan.data
+              service.data
                 .filter((item) => {
                   if (searchTerms === "") {
                     return item;
                   } else if (
-                    item.name
-                      .toLowerCase()
-                      .includes(searchTerms.toLowerCase()) ||
-                    item.username
-                      .toLowerCase()
-                      .includes(searchTerms.toLowerCase())
+                    item.name.toLowerCase().includes(searchTerms.toLowerCase())
                   ) {
                     return item;
                   }
@@ -100,15 +100,15 @@ export default function Loan(props) {
                   return (
                     <tr key={item.id}>
                       <td>{item.name}</td>
-                      <td>{item.username ? item.username : item.email}</td>
+                      <td>{item.type}</td>
                       <td>
                         {moment.utc(item.start_at).local().format("DD MMM,YY")}
                       </td>
                       <td>
                         {moment.utc(item.end_at).local().format("DD MMM,YY")}
                       </td>
-                      <td>{item.accidents ? "Kecelakaan" : "Normal"}</td>
                       <td>
+                        {" "}
                         <button
                           className="btn btn-warning me-1"
                           onClick={handleDetail.bind(this, item.id)}>
@@ -126,8 +126,8 @@ export default function Loan(props) {
           previousLabel={"previous"}
           nextLabel={"next"}
           breakLabel={"..."}
-          initialPage={loan.currentPage - 1}
-          pageCount={loan.maxPage}
+          initialPage={service.currentPage - 1}
+          pageCount={service.maxPage}
           onPageChange={handlePagination}
           containerClassName={"pagination"}
           pageClassName={"page-item"}
@@ -144,4 +144,4 @@ export default function Loan(props) {
     </>
   );
 }
-Loan.layout = Admin;
+Service.layout = Admin;

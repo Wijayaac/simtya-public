@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import router from "next/router";
 import axios from "axios";
 import moment from "moment";
+import ReactPaginate from "react-paginate";
 
 import FadeIn from "react-fade-in/lib/FadeIn";
 import {
@@ -23,6 +24,7 @@ import Admin from "../../../layouts/Admin";
 
 export async function getServerSideProps(ctx) {
   const token = await HandleDriverSSR(ctx);
+  const page = ctx.query.page || 1;
 
   const vehicle = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/admin/vehicle/motorcycle`,
@@ -33,7 +35,7 @@ export async function getServerSideProps(ctx) {
     }
   );
   const service = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/driver/service`,
+    `${process.env.NEXT_PUBLIC_API_URL}/driver/service/${page}`,
     {
       headers: {
         Authorization: token,
@@ -50,7 +52,7 @@ export async function getServerSideProps(ctx) {
       token: token,
       eventService: event.data.service,
       eventLoan: event.data.loan,
-      service: service.data.data,
+      service: service.data,
       vehicle: vehicle.data.data,
     },
   };
@@ -81,6 +83,9 @@ export default function Service(props) {
 
   useEffect(() => {
     setLoading(false);
+    return () => {
+      setLoading(false);
+    };
   }, []);
 
   const handleDetail = (id) => {
@@ -134,6 +139,15 @@ export default function Service(props) {
         setLoading(false);
       })
       .catch((error) => console.log("Error inserting service schedule", error));
+  };
+  const handlePagination = (page) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.page = page.selected + 1;
+    router.push({
+      pathname: path,
+      query: query,
+    });
   };
   return (
     <>
@@ -244,7 +258,7 @@ export default function Service(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {service
+                  {service.data
                     .filter((item) => {
                       if (searchTerms === "") {
                         return item;
@@ -284,6 +298,26 @@ export default function Service(props) {
                     })}
                 </tbody>
               </TableExample>
+              <ReactPaginate
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                previousLabel={"previous"}
+                nextLabel={"next"}
+                breakLabel={"..."}
+                initialPage={service.currentPage - 1}
+                pageCount={service.maxPage}
+                onPageChange={handlePagination}
+                containerClassName={"pagination"}
+                pageClassName={"page-item"}
+                pageLinkClassName={"page-link"}
+                activeClassName={"active"}
+                nextClassName={"page-item"}
+                nextLinkClassName={"page-link"}
+                previousClassName={"page-item"}
+                previousLinkClassName={"page-link"}
+                breakClassName={"page-item"}
+                breakLinkClassName={"page-link"}
+              />
             </div>
           )}
           <div className="col-6 mt-n3">

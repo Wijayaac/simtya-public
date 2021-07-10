@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import router from "next/router";
 import moment from "moment";
+import ReactPaginate from "react-paginate";
 
 // utils auth library
 import { HandleMemberSSR } from "../../utils/auth";
@@ -15,8 +16,9 @@ import Admin from "../../layouts/Admin";
 
 export async function getServerSideProps(ctx) {
   const token = await HandleMemberSSR(ctx);
+  const page = ctx.query.page || 1;
   const pickup = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/member/pickup`,
+    `${process.env.NEXT_PUBLIC_API_URL}/member/pickup/${page}`,
     {
       headers: {
         Authorization: token,
@@ -27,7 +29,7 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       token: token,
-      pickup: pickup.data.data,
+      pickup: pickup.data,
     },
   };
 }
@@ -82,6 +84,15 @@ export default function Pickup(props) {
         console.log("Error join the pickup schedule", error);
       });
   };
+  const handlePagination = (page) => {
+    const path = router.pathname;
+    const query = router.query;
+    query.page = page.selected + 1;
+    router.push({
+      pathname: path,
+      query: query,
+    });
+  };
   return (
     <>
       <div className="container px-5">
@@ -108,7 +119,7 @@ export default function Pickup(props) {
             </tr>
           </thead>
           <tbody>
-            {pickup
+            {pickup.data
               .filter((item) => {
                 if (searchTerms === "") {
                   return item;
@@ -145,6 +156,26 @@ export default function Pickup(props) {
               })}
           </tbody>
         </TableExample>
+        <ReactPaginate
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          previousLabel={"previous"}
+          nextLabel={"next"}
+          breakLabel={"..."}
+          initialPage={pickup.currentPage - 1}
+          pageCount={pickup.maxPage}
+          onPageChange={handlePagination}
+          containerClassName={"pagination"}
+          pageClassName={"page-item"}
+          pageLinkClassName={"page-link"}
+          activeClassName={"active"}
+          nextClassName={"page-item"}
+          nextLinkClassName={"page-link"}
+          previousClassName={"page-item"}
+          previousLinkClassName={"page-link"}
+          breakClassName={"page-item"}
+          breakLinkClassName={"page-link"}
+        />
       </div>
     </>
   );
