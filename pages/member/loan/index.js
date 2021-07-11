@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
 import router from "next/router";
 import ReactPaginate from "react-paginate";
 
-import FadeIn from "react-fade-in/lib/FadeIn";
 import {
   WeeklyCalendar,
   WeeklyBody,
@@ -16,7 +15,7 @@ import {
 // Components UI
 import TableExample from "../../../components/Tables/table";
 import Modal from "../../../components/Modals/modal";
-import ArticlePlaceholder from "../../../components/Skeleton/ArticlePlaceholder";
+import TablePlaceholder from "../../../components/Skeleton/TablePlaceholder";
 // utils auth library
 import { HandleMemberSSR } from "../../../utils/auth";
 import { parseJWT } from "../../../utils/parseJWT";
@@ -235,11 +234,7 @@ export default function Loan(props) {
           </form>
         </Modal>
         <div className="container mt-5 row row-cols-md-2">
-          {isLoading && (
-            <FadeIn>
-              <ArticlePlaceholder />
-            </FadeIn>
-          )}
+          {isLoading && <TablePlaceholder />}
           {!isLoading && (
             <div className="my-2 col-6">
               <input

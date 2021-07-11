@@ -71,7 +71,7 @@ export default function Dashboard(props) {
   return (
     <>
       <div className="container w-50">
-        <div className="header">
+        <div className="header text-center">
           <h1 className="title">Pie Chart</h1>
         </div>
         <Pie data={data} />

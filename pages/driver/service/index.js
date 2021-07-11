@@ -18,7 +18,7 @@ import { HandleDriverSSR } from "../../../utils/auth";
 // Components UI
 import Modal from "../../../components/Modals/modal";
 import TableExample from "../../../components/Tables/table";
-import ArticlePlaceholder from "../../../components/Skeleton/ArticlePlaceholder";
+import TablePlaceholder from "../../../components/Skeleton/TablePlaceholder";
 // Layout Component
 import Admin from "../../../layouts/Admin";
 
@@ -236,9 +236,9 @@ export default function Service(props) {
         </Modal>
         <div className="container mt-5 row row-cols-md-2">
           {isLoading && (
-            <FadeIn>
-              <ArticlePlaceholder />
-            </FadeIn>
+            <div className="col-6">
+              <TablePlaceholder />
+            </div>
           )}
           {!isLoading && (
             <div className="my-2 col-6">

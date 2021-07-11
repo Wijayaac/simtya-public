@@ -10,7 +10,7 @@ import { HandleMemberSSR } from "../../../../utils/auth";
 // layout components
 import Admin from "../../../../layouts/Admin";
 // loading placeholder
-import ArticlePlaceholder from "../../../../components/Skeleton/ArticlePlaceholder";
+import FormPlaceholder from "../../../../components/Skeleton/FormPlaceholder";
 
 export async function getServerSideProps(ctx) {
   const token = await HandleMemberSSR(ctx);
@@ -60,6 +60,9 @@ export default function LoanEdit(props) {
 
   useEffect(() => {
     setLoading(false);
+    return () => {
+      setLoading(false);
+    };
   }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -102,7 +105,7 @@ export default function LoanEdit(props) {
       <div className="container row row-cols-md-2">
         {isLoading && (
           <div className="col-6">
-            <ArticlePlaceholder />
+            <FormPlaceholder />
           </div>
         )}
         {!isLoading && (

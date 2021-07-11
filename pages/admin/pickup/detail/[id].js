@@ -7,7 +7,8 @@ import moment from "moment";
 import { HandleAdminSSR } from "../../../../utils/auth";
 
 // import loading placeholder
-import ArticlePlaceholder from "../../../../components/Skeleton/ArticlePlaceholder";
+import HistoryPlaceholder from "../../../../components/Skeleton/HistoryPlaceholder";
+import FormPlaceholder from "../../../../components/Skeleton/FormPlaceholder";
 
 // layout for Admin
 import Admin from "../../../../layouts/Admin";
@@ -53,6 +54,9 @@ export default function PickupEdit(props) {
 
   useEffect(() => {
     setLoading(false);
+    return () => {
+      setLoading(false);
+    };
   }, []);
 
   const handleSubmit = (e) => {
@@ -91,12 +95,12 @@ export default function PickupEdit(props) {
       <div className="container row row-cols-md-2">
         {isLoading && (
           <div className="col-6">
-            <ArticlePlaceholder />
+            <FormPlaceholder />
           </div>
         )}
         {!isLoading && (
           <div className="col-6">
-            <div className="d-flex flex-row justify-content-between mt-3">
+            <div className="d-flex flex-row justify-content-between mt-3 mb-5">
               <p className="fs-3 fw-bold">Edit Pickup Schedule</p>
               <button onClick={handleBack.bind(this)} className="btn btn-info">
                 <i className="bi bi-arrow-left-circle"></i> Back to Pickup
@@ -199,38 +203,45 @@ export default function PickupEdit(props) {
               <i className="bi bi-clock-history me-5"></i>History
             </p>
           </div>
-          <div
-            className="d-flex flex-row overflow-auto"
-            style={{ height: "80vh" }}>
-            <div id="content">
-              <ul className="timeline ">
-                {history.map((item) => {
-                  return (
-                    <li
-                      key={item.id}
-                      className="event"
-                      data-date={moment(item.created_at).format("H:mm a")}>
-                      <p>{item.email}</p>
-                      <span className="text-muted">{item.description}</span>
-                    </li>
-                  );
-                })}
-
-                <li
-                  className="event"
-                  data-date={moment(start).format("H:mm a")}>
-                  <h3
-                    className={
-                      pickup[0].ready ? "text-success" : "text-warning"
-                    }>
-                    {pickup[0].ready ? "Ready" : "Pending"}
-                  </h3>
-                  <p>{route}</p>
-                  <span className="text-muted">{pickup[0].description}</span>
-                </li>
-              </ul>
+          {isLoading && (
+            <div className="d-flex justify-content-center">
+              <HistoryPlaceholder />
             </div>
-          </div>
+          )}
+          {!isLoading && (
+            <div
+              className="d-flex flex-row overflow-auto"
+              style={{ height: "80vh" }}>
+              <div id="content">
+                <ul className="timeline ">
+                  {history.map((item) => {
+                    return (
+                      <li
+                        key={item.id}
+                        className="event"
+                        data-date={moment(item.created_at).format("H:mm a")}>
+                        <p>{item.email}</p>
+                        <span className="text-muted">{item.description}</span>
+                      </li>
+                    );
+                  })}
+
+                  <li
+                    className="event"
+                    data-date={moment(start).format("H:mm a")}>
+                    <h3
+                      className={
+                        pickup[0].ready ? "text-success" : "text-warning"
+                      }>
+                      {pickup[0].ready ? "Ready" : "Pending"}
+                    </h3>
+                    <p>{route}</p>
+                    <span className="text-muted">{pickup[0].description}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

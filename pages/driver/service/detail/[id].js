@@ -8,7 +8,7 @@ import { HandleDriverSSR } from "../../../../utils/auth";
 // import layout components
 import Admin from "../../../../layouts/Admin";
 // loading placeholder
-import ArticlePlaceholder from "../../../../components/Skeleton/ArticlePlaceholder";
+import FormPlaceholder from "../../../../components/Skeleton/FormPlaceholder";
 
 export async function getServerSideProps(ctx) {
   const token = await HandleDriverSSR(ctx);
@@ -22,7 +22,7 @@ export async function getServerSideProps(ctx) {
     }
   );
   const service = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/driver/service/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/driver/servicedetail/${id}`,
     {
       headers: {
         Authorization: token,
@@ -57,6 +57,9 @@ export default function ServiceEdit(props) {
 
   useEffect(() => {
     setLoading(false);
+    return () => {
+      setLoading(false);
+    };
   }, [select]);
 
   const handleSubmit = (e) => {
@@ -98,7 +101,7 @@ export default function ServiceEdit(props) {
       <div className="container row row-cols-md-2">
         {isLoading && (
           <div className="col-6">
-            <ArticlePlaceholder />
+            <FormPlaceholder />
           </div>
         )}
         {!isLoading && (

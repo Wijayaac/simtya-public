@@ -4,11 +4,11 @@ import router from "next/router";
 import ReactPaginate from "react-paginate";
 import moment from "moment";
 
-import FadeIn from "react-fade-in/lib/FadeIn";
 import { HandleAdminSSR } from "../../../utils/auth";
 
 // Components
 import TableExample from "../../../components/Tables/table";
+import TablePlaceholder from "../../../components/Skeleton/TablePlaceholder";
 import Modal from "../../../components/Modals/modal";
 // Layout
 import Admin from "../../../layouts/Admin";
@@ -215,73 +215,82 @@ export default function Pickup(props) {
         </Modal>
 
         <div className="container mt-5">
-          <TableExample>
-            <thead>
-              <tr>
-                <th>Vehicle</th>
-                <th>Pickup At</th>
-                <th>End At</th>
-                <th>Route</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pickup.data
-                .filter((item) => {
-                  if (searchTerms === "") {
-                    return item;
-                  } else if (
-                    item.name.toLowerCase().includes(searchTerms.toLowerCase())
-                  ) {
-                    return item;
-                  }
-                })
-                .map((item) => {
-                  return (
-                    <tr key={item.id}>
-                      <td>{item.name}</td>
-                      <td>{moment(item.start_at).format("DD MMMM ,HH:mm")}</td>
-                      <td>{moment(item.end_at).format("HH:mm")}</td>
-                      <td>{item.route}</td>
-                      <td>{item.ready === false ? "Pending" : "Ready"}</td>
-                      <td>
-                        <button
-                          className="btn btn-warning me-1"
-                          onClick={handleDetail.bind(this, item.id)}>
-                          <i className="bi bi-eye"></i>
-                        </button>
-                        <button
-                          className="btn btn-danger ms-1"
-                          onClick={handleDelete.bind(this, item.id)}>
-                          <i className="bi bi-trash"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </TableExample>
-          <ReactPaginate
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            previousLabel={"previous"}
-            nextLabel={"next"}
-            breakLabel={"..."}
-            initialPage={pickup.currentPage - 1}
-            pageCount={pickup.maxPage}
-            onPageChange={handlePagination}
-            containerClassName={"pagination"}
-            pageClassName={"page-item"}
-            pageLinkClassName={"page-link"}
-            activeClassName={"active"}
-            nextClassName={"page-item"}
-            nextLinkClassName={"page-link"}
-            previousClassName={"page-item"}
-            previousLinkClassName={"page-link"}
-            breakClassName={"page-item"}
-            breakLinkClassName={"page-link"}
-          />
+          {isLoading && <TablePlaceholder />}
+          {!isLoading && (
+            <div className="">
+              <TableExample>
+                <thead>
+                  <tr>
+                    <th>Vehicle</th>
+                    <th>Pickup At</th>
+                    <th>End At</th>
+                    <th>Route</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pickup.data
+                    .filter((item) => {
+                      if (searchTerms === "") {
+                        return item;
+                      } else if (
+                        item.name
+                          .toLowerCase()
+                          .includes(searchTerms.toLowerCase())
+                      ) {
+                        return item;
+                      }
+                    })
+                    .map((item) => {
+                      return (
+                        <tr key={item.id}>
+                          <td>{item.name}</td>
+                          <td>
+                            {moment(item.start_at).format("DD MMMM ,HH:mm")}
+                          </td>
+                          <td>{moment(item.end_at).format("HH:mm")}</td>
+                          <td>{item.route}</td>
+                          <td>{item.ready === false ? "Pending" : "Ready"}</td>
+                          <td>
+                            <button
+                              className="btn btn-warning me-1"
+                              onClick={handleDetail.bind(this, item.id)}>
+                              <i className="bi bi-eye"></i>
+                            </button>
+                            <button
+                              className="btn btn-danger ms-1"
+                              onClick={handleDelete.bind(this, item.id)}>
+                              <i className="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </TableExample>
+              <ReactPaginate
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                previousLabel={"previous"}
+                nextLabel={"next"}
+                breakLabel={"..."}
+                initialPage={pickup.currentPage - 1}
+                pageCount={pickup.maxPage}
+                onPageChange={handlePagination}
+                containerClassName={"pagination"}
+                pageClassName={"page-item"}
+                pageLinkClassName={"page-link"}
+                activeClassName={"active"}
+                nextClassName={"page-item"}
+                nextLinkClassName={"page-link"}
+                previousClassName={"page-item"}
+                previousLinkClassName={"page-link"}
+                breakClassName={"page-item"}
+                breakLinkClassName={"page-link"}
+              />
+            </div>
+          )}
         </div>
       </div>
     </>
