@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
 import router from "next/router";
 import Image from "next/image";
 
@@ -12,7 +11,6 @@ import {
   CardTitle,
   CardSubtitle,
 } from "reactstrap";
-import FadeIn from "react-fade-in/lib/FadeIn";
 
 // Components UI
 import Modal from "../../../components/Modals/modal";

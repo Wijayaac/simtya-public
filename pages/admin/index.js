@@ -1,18 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Pie } from "react-chartjs-2";
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: "row",
-    backgroundColor: "#E4E4E4",
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1,
-  },
-});
+import { saveAs } from "file-saver";
 
 // utils auth library
 import { HandleAdminSSR } from "../../utils/auth";
@@ -33,7 +22,7 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       token: token,
-      vehicles: vehicles.data,
+      vehicles: vehicles.data.rows,
     },
   };
 }
@@ -68,6 +57,17 @@ export default function Dashboard(props) {
       },
     ],
   };
+  const downloadPdf = (type) => {
+    // console.log(type);
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/admin/${type}-pdf`, {
+        responseType: "blob",
+      })
+      .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+        saveAs(pdfBlob, `${type}.pdf`);
+      });
+  };
   return (
     <>
       <div className="container w-50">
@@ -76,7 +76,26 @@ export default function Dashboard(props) {
         </div>
         <Pie data={data} />
       </div>
-
+      <button
+        className="btn btn-primary btn-lg btn-block"
+        onClick={downloadPdf.bind(this, "inventory")}>
+        Inventory PDF
+      </button>
+      <button
+        className="btn btn-danger btn-lg btn-block"
+        onClick={downloadPdf.bind(this, "service")}>
+        Service PDF
+      </button>
+      <button
+        className="btn btn-warning btn-lg btn-block"
+        onClick={downloadPdf.bind(this, "loan")}>
+        Loan PDF
+      </button>
+      <button
+        className="btn btn-success btn-lg btn-block"
+        onClick={downloadPdf.bind(this, "pickup")}>
+        Pickup PDF
+      </button>
       <h1>Hello Admin</h1>
     </>
   );

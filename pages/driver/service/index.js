@@ -4,7 +4,6 @@ import axios from "axios";
 import moment from "moment";
 import ReactPaginate from "react-paginate";
 
-import FadeIn from "react-fade-in/lib/FadeIn";
 import {
   WeeklyCalendar,
   WeeklyBody,
