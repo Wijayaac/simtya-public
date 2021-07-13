@@ -18,24 +18,19 @@ export default function Navbar() {
     setOpen(!dropdownOpen);
   };
   return (
-    <nav
-      className="navbar navbar-expand-lg navbar-light bg-light
-    
-    border-bottom justify-content-end">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light border-bottom justify-content-end">
       <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
         <DropdownToggle caret color="outline-white">
-          <Image
-            src="/vercel.svg"
-            width="48"
-            height="24"
-            alt="profile custom"
-          />
+          Menu
         </DropdownToggle>
         <DropdownMenu>
           <DropdownItem>
-            <Button color="outline-dark" onClick={logout} block>
+            <a
+              onClick={logout}
+              type="button"
+              className="btn btn-outline-dark btn-lg">
               Logout
-            </Button>
+            </a>
           </DropdownItem>
         </DropdownMenu>
       </ButtonDropdown>

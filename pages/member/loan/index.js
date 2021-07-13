@@ -13,8 +13,8 @@ import {
 } from "@zach.codes/react-calendar";
 
 // Components UI
-import TableExample from "../../../components/Tables/table";
-import Modal from "../../../components/Modals/modal";
+import TableExample from "../../../components/Tables";
+import Modal from "../../../components/Modals";
 import TablePlaceholder from "../../../components/Skeleton/TablePlaceholder";
 // utils auth library
 import { HandleMemberSSR } from "../../../utils/auth";

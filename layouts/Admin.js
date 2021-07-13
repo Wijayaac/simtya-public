@@ -2,8 +2,8 @@ import React from "react";
 
 // components
 
-import Sidebar from "../components/Sidebars/sidebar";
-import Navbar from "../components/Navbars/navbar";
+import Sidebar from "../components/Sidebars";
+import Navbar from "../components/Navbars";
 
 const Admin = ({ children }) => {
   return (

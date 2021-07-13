@@ -4,6 +4,7 @@ import ContentLoader from "react-content-loader";
 export default function TablePlaceholder(props) {
   return (
     <ContentLoader
+      id="table-placeholder"
       width="100%"
       height="100%"
       viewBox="0 0 1500 400"

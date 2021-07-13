@@ -13,7 +13,7 @@ import {
 } from "reactstrap";
 
 // Components UI
-import Modal from "../../../components/Modals/modal";
+import Modal from "../../../components/Modals/";
 import ArticlePlaceholder from "../../../components/Skeleton/ArticlePlaceholder";
 // Layout Component
 import Admin from "../../../layouts/Admin";

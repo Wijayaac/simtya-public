@@ -9,7 +9,7 @@ import { HandleMemberSSR } from "../../utils/auth";
 import { parseJWT } from "../../utils/parseJWT";
 
 // Components
-import TableExample from "../../components/Tables/table";
+import TableExample from "../../components/Tables";
 import TablePlaceholder from "../../components/Skeleton/TablePlaceholder";
 
 // Layout

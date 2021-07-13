@@ -7,9 +7,9 @@ import moment from "moment";
 import { HandleAdminSSR } from "../../../utils/auth";
 
 // Components
-import TableExample from "../../../components/Tables/table";
+import TableExample from "../../../components/Tables";
 import TablePlaceholder from "../../../components/Skeleton/TablePlaceholder";
-import Modal from "../../../components/Modals/modal";
+import Modal from "../../../components/Modals/";
 // Layout
 import Admin from "../../../layouts/Admin";
 

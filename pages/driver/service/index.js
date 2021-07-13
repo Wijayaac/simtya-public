@@ -15,8 +15,8 @@ import {
 import { HandleDriverSSR } from "../../../utils/auth";
 
 // Components UI
-import Modal from "../../../components/Modals/modal";
-import TableExample from "../../../components/Tables/table";
+import Modal from "../../../components/Modals";
+import TableExample from "../../../components/Tables";
 import TablePlaceholder from "../../../components/Skeleton/TablePlaceholder";
 // Layout Component
 import Admin from "../../../layouts/Admin";

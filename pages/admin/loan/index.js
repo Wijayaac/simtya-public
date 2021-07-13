@@ -7,7 +7,7 @@ import ReactPaginate from "react-paginate";
 // utils auth library
 import { HandleAdminSSR } from "../../../utils/auth";
 // Components
-import TableExample from "../../../components/Tables/table";
+import TableExample from "../../../components/Tables";
 import TablePlaceholder from "../../../components/Skeleton/TablePlaceholder";
 // Layout
 import Admin from "../../../layouts/Admin";

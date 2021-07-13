@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import Cookies from "js-cookie";
-import router from "next/router";
 
 // utils
 import { parseJWT } from "../../utils/parseJWT";
@@ -12,11 +10,19 @@ export default class Sidebar extends Component {
     super(props);
     this.state = {
       role: null,
+      name: null,
     };
   }
   componentDidMount = () => {
     const token = Cookies.get("token");
     const { role } = parseJWT(token);
+    if (role === 1) {
+      this.setState({ name: "admin" });
+    } else if (role === 2) {
+      this.setState({ name: "driver" });
+    } else {
+      this.setState({ name: "member" });
+    }
     this.setState({
       role,
     });
@@ -25,14 +31,14 @@ export default class Sidebar extends Component {
     return (
       <div className="bg-dark border-right fixed" id="sidebar-wrapper">
         <div className="sidebar-heading text-center text-white py-5">
-          <i className="bi bi-cone-striped"></i> Undagi Code
+          <i className="bi bi-cone-striped"></i> SIMTYA
         </div>
 
         <div className="list-group list-group-flush">
           {/* <!-- Get menu from @menu params ^^^ --> */}
           <ul className="nav nav-pills flex-column mb-auto border-bottom border-white">
             <li className="nav-item mb-4">
-              <Link href="/">
+              <Link href={`/${this.state.name}`}>
                 <a
                   className="nav-link fs-5 my-2 text-white"
                   aria-current="page">
@@ -50,7 +56,7 @@ export default class Sidebar extends Component {
                   <>
                     <ul className="nav nav-pills flex-column mb-auto">
                       <li>
-                        <Link href="/admin/pickup">
+                        <Link href={`/${this.state.name}/pickup`}>
                           <a className="nav-link fs-5 my-2 text-white">
                             <i className="mx-4 bi bi-geo-alt-fill"></i>
                             Pickup
@@ -59,27 +65,27 @@ export default class Sidebar extends Component {
                       </li>
                       <hr className="text-white-50" />
                       <li>
-                        <Link href="/admin/loan">
+                        <Link href={`/${this.state.name}/loan`}>
                           <a className="nav-link fs-5 my-2 text-white">
-                            <i className="mx-4 bi bi-speedometer"></i>
+                            <i className="mx-4 bi bi-bicycle"></i>
                             Loan
                           </a>
                         </Link>
                       </li>
                       <hr className="text-white-50" />
                       <li>
-                        <Link href="/admin/service">
+                        <Link href={`/${this.state.name}/service`}>
                           <a className="nav-link fs-5 my-2 text-white">
-                            <i className="mx-4 bi bi-person-circle"></i>
+                            <i className="mx-4 bi bi-speedometer"></i>
                             Service
                           </a>
                         </Link>
                       </li>
                       <hr className="text-white-50" />
                       <li className="border-top border-white mt-5">
-                        <Link href="/admin/inventory">
+                        <Link href={`/${this.state.name}/inventory`}>
                           <a className="nav-link fs-5 my-2 text-white">
-                            <i className="mx-4 bi bi-person-circle"></i>
+                            <i className="mx-4 bi bi-truck"></i>
                             Inventory
                           </a>
                         </Link>
@@ -93,7 +99,7 @@ export default class Sidebar extends Component {
                   <>
                     <ul className="nav nav-pills flex-column mb-auto">
                       <li>
-                        <Link href="/driver/pickup">
+                        <Link href={`/${this.state.name}/pickup`}>
                           <a className="nav-link fs-5 my-2 text-white">
                             <i className="mx-4 bi bi-geo-alt-fill"></i>
                             Pickup
@@ -102,7 +108,7 @@ export default class Sidebar extends Component {
                       </li>
                       <hr className="text-white-50" />
                       <li>
-                        <Link href="/driver/service">
+                        <Link href={`/${this.state.name}/service`}>
                           <a className="nav-link fs-5 my-2 text-white">
                             <i className="mx-4 bi bi-speedometer"></i>
                             Service
@@ -118,7 +124,7 @@ export default class Sidebar extends Component {
                   <>
                     <ul className="nav nav-pills flex-column mb-auto">
                       <li>
-                        <Link href="/member/pickup">
+                        <Link href={`/${this.state.name}/pickup`}>
                           <a className="nav-link fs-5 my-2 text-white">
                             <i className="mx-4 bi bi-geo-alt-fill"></i>
                             Pickup
@@ -127,18 +133,18 @@ export default class Sidebar extends Component {
                       </li>
                       <hr className="text-white-50" />
                       <li>
-                        <Link href="/member/loan">
+                        <Link href={`/${this.state.name}/loan`}>
                           <a className="nav-link fs-5 my-2 text-white">
-                            <i className="mx-4 bi bi-speedometer"></i>
+                            <i className="mx-4 bi bi-bicycle"></i>
                             Loan
                           </a>
                         </Link>
                       </li>
                       <hr className="text-white-50" />
                       <li>
-                        <Link href="/member/profile">
+                        <Link href={`/${this.state.name}/profile`}>
                           <a className="nav-link fs-5 my-2 text-white">
-                            <i className="mx-4 bi bi-speedometer"></i>
+                            <i className="mx-4 bi bi-person-circle"></i>
                             Profile
                           </a>
                         </Link>

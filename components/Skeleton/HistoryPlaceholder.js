@@ -4,6 +4,7 @@ import ContentLoader from "react-content-loader";
 export default function HistoryPlaceholder(props) {
   return (
     <ContentLoader
+      id="history-placeholder"
       width={350}
       height={600}
       viewBox="0 0 350 600"

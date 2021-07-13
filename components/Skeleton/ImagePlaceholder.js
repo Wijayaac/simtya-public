@@ -1,8 +1,10 @@
 import React from "react";
 import ContentLoader from "react-content-loader";
-function ImagePlaceholder() {
+
+export default function ImagePlaceholder() {
   return (
     <ContentLoader
+      id="image-placeholder"
       speed={2}
       width="100%"
       height="100%"
@@ -13,5 +15,3 @@ function ImagePlaceholder() {
     </ContentLoader>
   );
 }
-
-export default ImagePlaceholder;
