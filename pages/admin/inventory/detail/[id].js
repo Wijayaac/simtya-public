@@ -40,12 +40,15 @@ export default function VehicleEdit(props) {
   );
   const [name, setName] = useState(data[0].name);
   const [brand, setBrand] = useState(data[0].brand);
+  const [km, setKm] = useState(data[0].km);
+  const [now, setNow] = useState(data[0].now_km);
   const [type, setType] = useState(data[0].type);
   const [years, setYears] = useState(data[0].years);
   const [description, setDescription] = useState(data[0].description);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log(data);
     setLoading(false);
   }, []);
 
@@ -73,6 +76,8 @@ export default function VehicleEdit(props) {
     data.append("id", id);
     data.append("name", name);
     data.append("brand", brand);
+    data.append("km", km);
+    data.append("now", now);
     data.append("type", type);
     data.append("years", years);
     data.append("description", description);
@@ -164,6 +169,30 @@ export default function VehicleEdit(props) {
                   onChange={(e) => setBrand(e.target.value)}
                   type="text"
                   name="brand"
+                  className="form-control"
+                />
+              </div>
+              <div className="mb-3">
+                <label forHtml="inputBrand" className="form-label">
+                  Vehicle Kilometer
+                </label>
+                <input
+                  onChange={(e) => setKm(e.target.value)}
+                  type="number"
+                  value={km}
+                  name="km"
+                  className="form-control"
+                />
+              </div>
+              <div className="mb-3">
+                <label forHtml="inputBrand" className="form-label">
+                  Actual Kilometer
+                </label>
+                <input
+                  onChange={(e) => setNow(e.target.value)}
+                  type="number"
+                  value={now}
+                  name="now"
                   className="form-control"
                 />
               </div>

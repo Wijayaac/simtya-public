@@ -32,6 +32,8 @@ export default function Inventory(props) {
   const [name, setName] = useState([]);
   const [type, setType] = useState([]);
   const [brand, setBrand] = useState([]);
+  const [km, setKm] = useState(0);
+  const [now, setNow] = useState(0);
   const [years, setYears] = useState([]);
   const [photo, setPhoto] = useState(false);
   const [preview, setPreview] = useState("/vercel.svg");
@@ -69,6 +71,8 @@ export default function Inventory(props) {
     data.append("name", name);
     data.append("type", type);
     data.append("brand", brand);
+    data.append("km", km);
+    data.append("now", now);
     data.append("years", years);
     data.append("photo", photo, photo.name);
     data.append("description", description);
@@ -171,6 +175,28 @@ export default function Inventory(props) {
                 onChange={(e) => setBrand(e.target.value)}
                 type="text"
                 name="brand"
+                className="form-control"
+              />
+            </div>
+            <div className="mb-3">
+              <label forHtml="inputBrand" className="form-label">
+                Vehicle Kilometer
+              </label>
+              <input
+                onChange={(e) => setKm(e.target.value)}
+                type="number"
+                name="km"
+                className="form-control"
+              />
+            </div>
+            <div className="mb-3">
+              <label forHtml="inputBrand" className="form-label">
+                Actual Kilometer
+              </label>
+              <input
+                onChange={(e) => setNow(e.target.value)}
+                type="number"
+                name="now"
                 className="form-control"
               />
             </div>
