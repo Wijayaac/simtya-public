@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Pie } from "react-chartjs-2";
 import { saveAs } from "file-saver";
@@ -29,6 +29,7 @@ export async function getServerSideProps(ctx) {
 
 export default function Dashboard(props) {
   const { vehicles } = props;
+  const [isLoading, setLoading] = useState(true);
   let name = vehicles.map(({ type }) => type);
   let count = vehicles.map(({ count }) => count);
   const data = {
@@ -57,8 +58,16 @@ export default function Dashboard(props) {
       },
     ],
   };
+
+  useEffect(() => {
+    setLoading(false);
+    return () => {
+      setLoading(false);
+    };
+  }, []);
+
   const downloadPdf = (type) => {
-    // console.log(type);
+    setLoading(true);
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/admin/${type}-pdf`, {
         responseType: "blob",
@@ -66,6 +75,7 @@ export default function Dashboard(props) {
       .then((res) => {
         const pdfBlob = new Blob([res.data], { type: "application/pdf" });
         saveAs(pdfBlob, `${type}.pdf`);
+        setLoading(false);
       });
   };
   return (
@@ -77,23 +87,27 @@ export default function Dashboard(props) {
         <Pie data={data} />
       </div>
       <button
-        className="btn btn-primary btn-lg btn-block"
-        onClick={downloadPdf.bind(this, "inventory")}>
+        className="btn btn-outline-primary btn-lg btn-block "
+        onClick={downloadPdf.bind(this, "inventory")}
+        disabled={isLoading}>
         Inventory PDF
       </button>
       <button
-        className="btn btn-danger btn-lg btn-block"
-        onClick={downloadPdf.bind(this, "service")}>
+        className="btn btn-outline-danger btn-lg btn-block"
+        onClick={downloadPdf.bind(this, "service")}
+        disabled={isLoading}>
         Service PDF
       </button>
       <button
-        className="btn btn-warning btn-lg btn-block"
-        onClick={downloadPdf.bind(this, "loan")}>
+        className="btn btn-outline-warning btn-lg btn-block"
+        onClick={downloadPdf.bind(this, "loan")}
+        disabled={isLoading}>
         Loan PDF
       </button>
       <button
-        className="btn btn-success btn-lg btn-block"
-        onClick={downloadPdf.bind(this, "pickup")}>
+        className="btn btn-outline-success btn-lg btn-block"
+        onClick={downloadPdf.bind(this, "pickup")}
+        disabled={isLoading}>
         Pickup PDF
       </button>
       <h1>Hello Admin</h1>

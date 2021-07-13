@@ -56,11 +56,11 @@ export default function Inventory(props) {
       })
       .then((response) => {
         setData(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
       });
-    setLoading(false);
   }, [token]);
 
   const handleSubmit = (e) => {

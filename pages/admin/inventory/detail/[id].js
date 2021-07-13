@@ -48,7 +48,6 @@ export default function VehicleEdit(props) {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log(data);
     setLoading(false);
   }, []);
 
