@@ -59,11 +59,16 @@ export default function Loan(props) {
 
   const [select, setSelect] = useState([]);
   const [purpose, setPurpose] = useState([]);
-  const [start, setStart] = useState(false);
-  const [end, setEnd] = useState(false);
+  const [start, setStart] = useState(
+    moment(moment.now()).utcOffset(480).format("YYYY-MM-DDThh:mm")
+  );
+  const [end, setEnd] = useState(
+    moment(moment.now()).utcOffset(480).format("YYYY-MM-DDThh:mm")
+  );
   const [description, setDescription] = useState([]);
   const [searchTerms, setSearchTerms] = useState("");
   const [isLoading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
 
   let services = eventService.map((item) => {
     return { name: item.name, date: moment(item.start_at)._d };
@@ -81,37 +86,44 @@ export default function Loan(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/member/loan`;
-    axios
-      .post(
-        url,
-        {
-          vehicle: select,
-          user: sub,
-          purpose: purpose,
-          start_at: start,
-          end_at: end,
-          description: description,
-          accidents: false,
-        },
-        {
-          headers: {
-            Authorization: token,
-            Accept: "application/json",
-            "Access-Control-Allow-Origin": "*",
+    if (
+      moment(start).isBefore(moment.now(), "day") ||
+      moment(end).isBefore(moment(start), "day")
+    ) {
+      setMessage("schedule time inccorect");
+    } else {
+      setLoading(true);
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/member/loan`;
+      axios
+        .post(
+          url,
+          {
+            vehicle: select,
+            user: sub,
+            purpose: purpose,
+            start_at: start,
+            end_at: end,
+            description: description,
+            accidents: false,
           },
-        }
-      )
-      .then(({ data }) => {
-        if (!data) {
-          alert("Motorcycle already booked, pick another day or motorcycle");
-        } else {
-          router.reload();
-        }
-        setLoading(false);
-      })
-      .catch((error) => console.log("Error insert new loan", error));
+          {
+            headers: {
+              Authorization: token,
+              Accept: "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+          }
+        )
+        .then(({ data }) => {
+          if (!data) {
+            alert("Motorcycle already booked, pick another day or motorcycle");
+          } else {
+            router.reload();
+          }
+          setLoading(false);
+        })
+        .catch((error) => console.log("Error insert new loan", error));
+    }
   };
   const handlePagination = (page) => {
     const path = router.pathname;
@@ -155,6 +167,7 @@ export default function Loan(props) {
               <select
                 name="id_vehicle"
                 onChange={(e) => setSelect(e.target.value)}
+                required
                 className="form-select">
                 <option selected>Select one vehicle</option>
                 {vehicle.map((item) => {
@@ -177,6 +190,7 @@ export default function Loan(props) {
                 onChange={(e) => {
                   setPurpose(e.target.value);
                 }}
+                required
                 type="text"
                 name="purpose"
                 className="form-control"
@@ -191,6 +205,7 @@ export default function Loan(props) {
                 onChange={(e) => {
                   setStart(e.target.value);
                 }}
+                required
                 type="date"
                 name="start_date"
                 className="form-control"
@@ -205,12 +220,16 @@ export default function Loan(props) {
                 onChange={(e) => {
                   setEnd(e.target.value);
                 }}
+                required
                 type="date"
                 name="end_date"
                 className="form-control"
                 id="inputYears"
               />
             </div>
+            <small className="text-danger">
+              {message ? `*${message}` : ""}
+            </small>
             <div className="mb-3">
               <label forHtml="inputDescription" className="form-label">
                 Description
@@ -219,6 +238,7 @@ export default function Loan(props) {
                 onChange={(e) => {
                   setDescription(e.target.value);
                 }}
+                required
                 name="description"
                 className="form-control"
                 id="inputDescription"></textarea>

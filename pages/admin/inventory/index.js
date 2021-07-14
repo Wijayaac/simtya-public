@@ -145,6 +145,7 @@ export default function Inventory(props) {
               <input
                 name="name"
                 onChange={(e) => setName(e.target.value)}
+                required
                 type="text"
                 className="form-control"
                 aria-describedby="nameHelp"
@@ -173,6 +174,7 @@ export default function Inventory(props) {
               </label>
               <input
                 onChange={(e) => setBrand(e.target.value)}
+                required
                 type="text"
                 name="brand"
                 className="form-control"
@@ -184,6 +186,7 @@ export default function Inventory(props) {
               </label>
               <input
                 onChange={(e) => setKm(e.target.value)}
+                required
                 type="number"
                 name="km"
                 className="form-control"
@@ -195,6 +198,7 @@ export default function Inventory(props) {
               </label>
               <input
                 onChange={(e) => setNow(e.target.value)}
+                required
                 type="number"
                 name="now"
                 className="form-control"
@@ -206,6 +210,7 @@ export default function Inventory(props) {
               </label>
               <input
                 onChange={(e) => setYears(e.target.value)}
+                required
                 type="number"
                 name="years"
                 className="form-control"
@@ -221,11 +226,11 @@ export default function Inventory(props) {
                   onChange={(e) => {
                     onImageChange(e);
                   }}
+                  required
                   type="file"
                   name="photo"
                   className="form-control me-1"
                   id="inputPhoto"
-                  required
                 />
                 <Image
                   id="target"
@@ -244,6 +249,7 @@ export default function Inventory(props) {
               <textarea
                 name="description"
                 onChange={(e) => setDescription(e.target.value)}
+                required
                 type="file"
                 className="form-control"
                 id="inputPhoto"></textarea>

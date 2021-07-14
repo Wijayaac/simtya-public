@@ -66,11 +66,16 @@ export default function Service(props) {
 
   const [isLoading, setLoading] = useState(true);
   const [select, setSelect] = useState([]);
-  const [start, setStart] = useState(false);
-  const [end, setEnd] = useState(false);
+  const [start, setStart] = useState(
+    moment(moment.now()).utcOffset(480).format("YYYY-MM-DDThh:mm")
+  );
+  const [end, setEnd] = useState(
+    moment(moment.now()).utcOffset(480).format("YYYY-MM-DDThh:mm")
+  );
   const [description, setDescription] = useState([]);
   const [type, setType] = useState([]);
   const [searchTerms, setSearchTerms] = useState("");
+  const [message, setMessage] = useState("");
 
   let services = eventService.map((item) => {
     return { name: item.name, date: moment(item.start_at)._d };
@@ -102,42 +107,51 @@ export default function Service(props) {
         },
       })
       .then(() => {
-        router.reload();
         setLoading(false);
       })
       .catch((error) => console.log("Error deleting data", error));
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/driver/service`;
-    axios
-      .post(
-        url,
-        {
-          vehicle: select,
-          start_at: start,
-          end_at: end,
-          type: type,
-          description: description,
-        },
-        {
-          headers: {
-            Accept: "application/json",
-            "Access-Controll-Allow-Origin": "*",
-            Authorization: token,
+
+    if (
+      moment(start).isBefore(moment.now(), "day") ||
+      moment(end).isBefore(moment(start), "day")
+    ) {
+      setMessage("schedule time inccorect");
+    } else {
+      setLoading(true);
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/driver/service`;
+      axios
+        .post(
+          url,
+          {
+            vehicle: select,
+            start_at: start,
+            end_at: end,
+            type: type,
+            description: description,
           },
-        }
-      )
-      .then(({ data }) => {
-        if (!data) {
-          alert("Motorcycle on book, pick another day or motorcycle");
-        } else {
-          router.reload();
-        }
-        setLoading(false);
-      })
-      .catch((error) => console.log("Error inserting service schedule", error));
+          {
+            headers: {
+              Accept: "application/json",
+              "Access-Controll-Allow-Origin": "*",
+              Authorization: token,
+            },
+          }
+        )
+        .then(({ data }) => {
+          if (!data) {
+            alert("Motorcycle on book, pick another day or motorcycle");
+          } else {
+            router.reload();
+          }
+          setLoading(false);
+        })
+        .catch((error) =>
+          console.log("Error inserting service schedule", error)
+        );
+    }
   };
   const handlePagination = (page) => {
     const path = router.pathname;
@@ -163,6 +177,7 @@ export default function Service(props) {
               <select
                 onChange={(e) => setSelect(e.target.value)}
                 name="id_vehicle"
+                required
                 id=""
                 className="form-select">
                 <option selected>Select Motorcycle</option>
@@ -184,6 +199,7 @@ export default function Service(props) {
               </label>
               <input
                 onChange={(e) => setStart(e.target.value)}
+                required
                 type="date"
                 name="start_date"
                 className="form-control"
@@ -196,12 +212,16 @@ export default function Service(props) {
               </label>
               <input
                 onChange={(e) => setEnd(e.target.value)}
+                required
                 type="date"
                 name="end_date"
                 className="form-control"
                 id="inputYears"
               />
             </div>
+            <small className="text-danger">
+              {message ? `*${message}` : ""}
+            </small>
             <div className="mb-3">
               <label htmlFor="inputType" className="form-label">
                 Type of Service
@@ -209,6 +229,7 @@ export default function Service(props) {
               <input
                 onChange={(e) => setType(e.target.value)}
                 id="inputType"
+                required
                 type="text"
                 className="form-control"
               />
@@ -220,6 +241,7 @@ export default function Service(props) {
               <textarea
                 onChange={(e) => setDescription(e.target.value)}
                 name="description"
+                required
                 className="form-control"
                 id="inputDescription"></textarea>
             </div>

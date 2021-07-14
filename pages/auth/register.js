@@ -47,6 +47,7 @@ export default function Register() {
           <input
             name="email"
             onChange={(e) => setEmail(e.target.value)}
+            required
             type="email"
             className="form-control"
             id="floatingInput"
@@ -58,6 +59,7 @@ export default function Register() {
           <input
             name="username"
             onChange={(e) => setUsername(e.target.value)}
+            required
             type="text"
             className="form-control"
             id="floatingInput"
@@ -69,6 +71,7 @@ export default function Register() {
           <input
             name="password"
             onChange={(e) => setPassword(e.target.value)}
+            required
             type="password"
             className="form-control"
             id="floatingPassword"

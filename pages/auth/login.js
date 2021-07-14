@@ -66,6 +66,7 @@ export default function Login() {
             onChange={(e) => {
               setEmail(e.target.value);
             }}
+            required
             type="email"
             className="form-control"
             id="floatingInput"
@@ -79,6 +80,7 @@ export default function Login() {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
+            required
             type="password"
             className="form-control"
             id="floatingPassword"

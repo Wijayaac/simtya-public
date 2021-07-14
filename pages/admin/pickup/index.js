@@ -48,10 +48,15 @@ export default function Pickup(props) {
   const [data, setData] = useState(vehicle);
   const [isLoading, setLoading] = useState(true);
   const [select, setSelect] = useState([]);
-  const [start, setStart] = useState(false);
-  const [end, setEnd] = useState(false);
+  const [start, setStart] = useState(
+    moment(moment.now()).utcOffset(480).format("YYYY-MM-DDThh:mm")
+  );
+  const [end, setEnd] = useState(
+    moment(moment.now()).utcOffset(480).format("YYYY-MM-DDThh:mm")
+  );
   const [route, setRoute] = useState([]);
   const [searchTerms, setSearchTerms] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     setLoading(false);
@@ -76,36 +81,44 @@ export default function Pickup(props) {
       })
       .then(() => {
         setLoading(false);
-        router.reload();
       })
       .catch((err) => console.log(err));
   };
+
   const handleSubmit = (e) => {
-    e.preventDefault;
-    setLoading(true);
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/admin/pickup`;
-    axios
-      .post(
-        url,
-        {
-          route: route,
-          start_at: start,
-          vehicle: select,
-          end_at: end,
-        },
-        {
-          headers: {
-            Accept: "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: token,
+    e.preventDefault();
+
+    if (
+      moment(start).isBefore(moment.now(), "day") ||
+      moment(end).isBefore(moment(start), "day")
+    ) {
+      setMessage("schedule time inccorect");
+    } else {
+      setLoading(true);
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/admin/pickup`;
+      axios
+        .post(
+          url,
+          {
+            route: route,
+            start_at: start,
+            vehicle: select,
+            end_at: end,
           },
-        }
-      )
-      .then(() => {
-        setLoading(false);
-        router.reload();
-      })
-      .catch((error) => console.log(error));
+          {
+            headers: {
+              Accept: "application/json",
+              "Access-Control-Allow-Origin": "*",
+              Authorization: token,
+            },
+          }
+        )
+        .then(() => {
+          setLoading(false);
+          router.reload();
+        })
+        .catch((error) => console.log(error));
+    }
   };
   const handlePagination = (page) => {
     const path = router.pathname;
@@ -138,13 +151,14 @@ export default function Pickup(props) {
                 Vehicle
               </label>
               <select
+                required
                 id="selectVehicle"
                 onChange={(e) => {
                   setSelect(e.target.value);
                 }}
                 className="form-select"
                 aria-label="select vehicle">
-                <option selected>Select one vehicle</option>
+                <option defaultChecked>Select one vehicle</option>
                 {data.map((item) => {
                   return (
                     <option
@@ -163,6 +177,7 @@ export default function Pickup(props) {
               </label>
               <input
                 onChange={(e) => setRoute(e.target.value)}
+                required
                 type="text"
                 className="form-control"
                 id="inputRoute"
@@ -179,8 +194,10 @@ export default function Pickup(props) {
                     Start Time
                   </label>
                   <input
-                    type="datetime-local"
+                    required
                     onChange={(e) => setStart(e.target.value)}
+                    type="datetime-local"
+                    value={start}
                   />
                 </div>
                 <div className="col">
@@ -188,10 +205,15 @@ export default function Pickup(props) {
                     End Time
                   </label>
                   <input
-                    type="datetime-local"
+                    value={end}
+                    required
                     onChange={(e) => setEnd(e.target.value)}
+                    type="datetime-local"
                   />
                 </div>
+                <small className="text-danger">
+                  {message ? `*${message}` : ""}
+                </small>
               </div>
             </div>
             <div className="d-flex justify-content-end">
