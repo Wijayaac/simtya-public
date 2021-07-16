@@ -63,7 +63,7 @@ export default function Service(props) {
     <>
       <div className="container px-5">
         <div className="text-center fs-3 fw-bold">
-          <p>Pickup List</p>
+          <p>Service List</p>
         </div>
         <div className="d-flex d-flex-column justify-content-end">
           <input

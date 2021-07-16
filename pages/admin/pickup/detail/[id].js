@@ -236,6 +236,13 @@ export default function PickupEdit(props) {
                       {pickup[0].ready ? "Ready" : "Pending"}
                     </h3>
                     <p>{route}</p>
+                    <small className="text-muted">
+                      NOTE: description of events that occur from this vehicle
+                      loan, can be in the form of accidents, or incidents such
+                      as damage that occurs. You can view the report here and
+                      see in detail.
+                    </small>
+                    <br />
                     <span className="text-muted">{pickup[0].description}</span>
                   </li>
                 </ul>
