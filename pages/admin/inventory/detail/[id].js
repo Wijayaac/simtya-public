@@ -117,12 +117,12 @@ export default function VehicleEdit(props) {
     <>
       <div className="container row row-cols-md-2">
         {isLoading && (
-          <div className="col-6">
+          <div className="col">
             <FormPlaceholder />
           </div>
         )}
         {!isLoading && (
-          <div className="col-6">
+          <div className="col">
             <div className="d-flex flex-row justify-content-between mt-3">
               <p className="fs-3 fw-bold">Edit Inventory</p>
               <button onClick={handleBack.bind(this)} className="btn btn-info">
@@ -261,7 +261,7 @@ export default function VehicleEdit(props) {
             </form>
           </div>
         )}
-        <div className="col-6">
+        <div className="col">
           <div className="d-flex flex-row justify-content-center mt-3">
             <p className="fs-3 fw-bold">
               <i className="bi bi-clock-history me-5"></i>History

@@ -26,13 +26,11 @@ export async function getServerSideProps(ctx) {
   );
   return {
     props: {
-      token: token,
       pickup: pickup.data,
     },
   };
 }
 export default function Pickup(props) {
-  const { token } = props;
   const { pickup } = props;
   const [searchTerms, setSearchTerms] = useState("");
   const [isLoading, setLoading] = useState(true);
@@ -58,11 +56,11 @@ export default function Pickup(props) {
   };
   return (
     <>
-      <div className="container px-5">
+      <div className="container px-1 px-md-5">
         <div className="text-center fs-3 fw-bold">
           <p>Pickup List</p>
         </div>
-        <div className="container mt-5">
+        <div className="container my-2 mt-5">
           <input
             className="p-2 border border-dark rounded"
             type="search"
@@ -71,7 +69,7 @@ export default function Pickup(props) {
           />
           {isLoading && <TablePlaceholder />}
           {!isLoading && (
-            <div className="">
+            <div className="overflow-auto">
               <TableExample>
                 <thead>
                   <tr>

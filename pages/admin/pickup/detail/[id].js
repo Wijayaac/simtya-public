@@ -94,12 +94,12 @@ export default function PickupEdit(props) {
     <>
       <div className="container row row-cols-md-2">
         {isLoading && (
-          <div className="col-6">
+          <div className="col my-2">
             <FormPlaceholder />
           </div>
         )}
         {!isLoading && (
-          <div className="col-6">
+          <div className="col my-2">
             <div className="d-flex flex-row justify-content-between mt-3 mb-5">
               <p className="fs-3 fw-bold">Edit Pickup Schedule</p>
               <button onClick={handleBack.bind(this)} className="btn btn-info">
@@ -197,7 +197,7 @@ export default function PickupEdit(props) {
             </form>
           </div>
         )}
-        <div className="col-6">
+        <div className="col my-2">
           <div className="d-flex flex-row justify-content-center mt-3">
             <p className="fs-3 fw-bold">
               <i className="bi bi-clock-history me-5"></i>History

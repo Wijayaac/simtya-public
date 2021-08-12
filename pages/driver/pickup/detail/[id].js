@@ -71,6 +71,7 @@ export default function PickupDriverEdit(props) {
           end_km: endKm,
           ready: ready,
           accidents: accidents,
+          route: route,
         },
         {
           headers: {
@@ -93,13 +94,13 @@ export default function PickupDriverEdit(props) {
     <>
       <div className="container row row-cols-md-2">
         {isLoading && (
-          <div className="col-6">
+          <div className="col">
             <FormPlaceholder />
           </div>
         )}
         {!isLoading && (
-          <div className="col-6">
-            <div className="d-flex flex-row justify-content-between mt-3">
+          <div className="col">
+            <div className="d-flex flex-row justify-content-between mt-3 my-3">
               <p className="fs-3 fw-bold">Edit Pickup Schedule</p>
               <button onClick={handleBack.bind(this)} className="btn btn-info">
                 <i className="bi bi-arrow-left-circle"></i> Back to Pickup
@@ -211,7 +212,7 @@ export default function PickupDriverEdit(props) {
             </form>
           </div>
         )}
-        <div className="col-6">
+        <div className="col">
           <div className="d-flex flex-row justify-content-center mt-3">
             <p className="fs-3 fw-bold">
               <i className="bi bi-clock-history me-5"></i>History
@@ -247,6 +248,13 @@ export default function PickupDriverEdit(props) {
                       {ready ? "Ready" : "Pending"}
                     </h3>
                     <p>{route}</p>
+                    <small className="text-muted">
+                      NOTE: description of events that occur from this vehicle
+                      loan, can be in the form of accidents, or incidents such
+                      as damage that occurs. You can view the report here and
+                      see in detail.
+                    </small>
+                    <br />
                     <span className="text-muted">{description}</span>
                   </li>
                 </ul>

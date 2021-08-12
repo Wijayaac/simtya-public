@@ -51,15 +51,24 @@ export default function Pickup(props) {
         },
       })
       .then(({ data }) => {
-        let isJoin = data.active;
+        let response = data.data;
+        let isJoin =
+          response.active &&
+          moment(response.created_at).isSame(moment(), "date");
         setJoin(isJoin);
-        let today = data.created_at;
-        let isToday = moment(today).isSame(moment(), "day");
-        setJoin(isToday);
+        // console.log(join);
+        // let today = response.created_at;
+        // let isToday = moment(today).isSame(moment(), "date");
+        // if (isToday) setJoin(!isToday);
+        // console.log(join);
       })
       .catch((error) => console.log("wait for join", error));
   }, [sub, token]);
-  const handleJoin = (id) => {
+  const handleJoin = (id, startDate) => {
+    let today = moment();
+    let isYesterday = moment(startDate).isBefore(today, "date");
+    if (isYesterday)
+      alert("This pickup schedule, was unavailable. Select today schedule");
     setJoin(true);
     axios
       .post(
@@ -97,7 +106,7 @@ export default function Pickup(props) {
   };
   return (
     <>
-      <div className="container px-5">
+      <div className="container px-1 px-md-5">
         <div className="text-center fs-3 fw-bold">
           <p>Pickup List</p>
         </div>
@@ -111,7 +120,7 @@ export default function Pickup(props) {
         </div>
         {isLoading && <TablePlaceholder />}
         {!isLoading && (
-          <div className="">
+          <div className="overflow-auto">
             <TableExample>
               <thead>
                 <tr>
@@ -150,12 +159,16 @@ export default function Pickup(props) {
                           <td>Wait pickup time</td>
                         ) : (
                           <td>
-                            {join && "Wait pickup time"}
+                            {join && "Wait Pickup Time"}
                             {!join && (
                               <button
                                 className="btn btn-warning me-1"
-                                onClick={handleJoin.bind(this, item.id)}>
-                                <i className="bi bi-box-arrow-in-right"></i>{" "}
+                                onClick={handleJoin.bind(
+                                  this,
+                                  item.id,
+                                  item.start_at
+                                )}>
+                                <i className="bi bi-box-arrow-in-right"></i>
                                 Join
                               </button>
                             )}

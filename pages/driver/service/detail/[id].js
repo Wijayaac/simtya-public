@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import router from "next/router";
 import axios from "axios";
 import moment from "moment";
+import { Button, ButtonGroup } from "reactstrap";
 
 // utils auth library
 import { HandleDriverSSR } from "../../../../utils/auth";
@@ -50,7 +51,10 @@ export default function ServiceEdit(props) {
   const [endKm, setEndKm] = useState(service[0].end_km);
   const [type, setType] = useState(service[0].type);
   const [description, setDescription] = useState(service[0].description);
+  const [fee, setFee] = useState(service[0].service_fee);
+  const [part, setPart] = useState(service[0].service_part);
   const [isLoading, setLoading] = useState(true);
+  const [isFinish, setFinish] = useState(true);
 
   let id_vehicle = vehicle.map(({ id }) => id);
   let name = vehicle.map(({ name }) => name);
@@ -78,6 +82,8 @@ export default function ServiceEdit(props) {
           vehicle: select,
           start_km: startKm,
           end_km: endKm,
+          fee: fee,
+          part: part,
         },
         {
           headers: {
@@ -98,18 +104,18 @@ export default function ServiceEdit(props) {
   };
   return (
     <>
-      <div className="container row row-cols-md-2">
+      <div className="container row row-cols-md-1">
         {isLoading && (
-          <div className="col-6">
+          <div className="col">
             <FormPlaceholder />
           </div>
         )}
         {!isLoading && (
-          <div className="col-6">
-            <div className="d-flex flex-row justify-content-between mt-3">
-              <p className="fs-3 fw-bold">Edit Loan Schedule</p>
+          <div className="col">
+            <div className="d-flex flex-row justify-content-between my-2 mt-3">
+              <p className="fs-3 fw-bold">Edit Service Detail</p>
               <button onClick={handleBack.bind(this)} className="btn btn-info">
-                <i className="bi bi-arrow-left-circle"></i> Back to Loan
+                <i className="bi bi-arrow-left-circle"></i> Back to Service
               </button>
             </div>
             <form onSubmit={handleSubmit}>
@@ -160,7 +166,6 @@ export default function ServiceEdit(props) {
                     select === id_vehicle[0] ? name[0] : "Select one Vehicle"
                   }>
                   {vehicle.map((item) => {
-                    console.log(select);
                     return (
                       <option
                         key={item.id}
@@ -173,7 +178,7 @@ export default function ServiceEdit(props) {
                 </select>
               </div>
               <div className="mb-3">
-                <label forHtml="inputType" className="form-label">
+                <label forhtml="inputType" className="form-label">
                   Purpose
                 </label>
                 <input
@@ -188,7 +193,7 @@ export default function ServiceEdit(props) {
                 />
               </div>
               <div className="mb-3">
-                <label forHtml="inputYears" className="form-label">
+                <label forhtml="inputYears" className="form-label">
                   Start Date
                 </label>
                 <input
@@ -203,7 +208,7 @@ export default function ServiceEdit(props) {
                 />
               </div>
               <div className="mb-3">
-                <label forHtml="inputYears" className="form-label">
+                <label forhtml="inputYears" className="form-label">
                   Finish Date
                 </label>
                 <input
@@ -218,7 +223,59 @@ export default function ServiceEdit(props) {
                 />
               </div>
               <div className="mb-3">
-                <label forHtml="inputPhoto" className="form-label">
+                <label className="form-label d-block">Finish Service ?</label>
+                <ButtonGroup>
+                  <Button
+                    color="outline-success"
+                    onClick={() => setFinish(true)}
+                    active={isFinish}>
+                    Yes
+                  </Button>
+                  <Button
+                    color="outline-danger"
+                    onClick={() => setFinish(false)}
+                    active={!isFinish}>
+                    No
+                  </Button>
+                </ButtonGroup>
+                <p>{isFinish ? "Add your details into field bellow" : ""}</p>
+              </div>
+              {isFinish && (
+                <div className="row">
+                  <div className="mb-3 col">
+                    <label forhtml="inputFee" className="form-label">
+                      Service Fee
+                    </label>
+                    <input
+                      defaultValue={fee}
+                      onChange={(e) => {
+                        setFee(e.target.value);
+                      }}
+                      type="number"
+                      name="purpose"
+                      className="form-control"
+                      id="inputFee"
+                    />
+                  </div>
+                  <div className="mb-3 col">
+                    <label forhtml="inputPart" className="form-label">
+                      Service Part
+                    </label>
+                    <input
+                      defaultValue={part}
+                      onChange={(e) => {
+                        setPart(e.target.value);
+                      }}
+                      type="text"
+                      name="purpose"
+                      className="form-control"
+                      id="inputPart"
+                    />
+                  </div>
+                </div>
+              )}
+              <div className="mb-3">
+                <label forhtml="inputPhoto" className="form-label">
                   Description
                 </label>
                 <textarea

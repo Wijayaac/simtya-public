@@ -26,14 +26,12 @@ export async function getServerSideProps(ctx) {
   );
   return {
     props: {
-      token: token,
       loan: loan.data,
     },
   };
 }
 
 export default function Loan(props) {
-  const { token } = props;
   const { loan } = props;
 
   const [searchTerms, setSearchTerms] = useState("");
@@ -58,11 +56,11 @@ export default function Loan(props) {
   };
   return (
     <>
-      <div className="container px-5">
+      <div className="container px-1 px-md-5">
         <div className="text-center fs-3 fw-bold">
           <p>Loan List</p>
         </div>
-        <div className="d-flex d-flex-column justify-content-end">
+        <div className="d-flex d-flex-column justify-content-end my-2">
           <input
             className="p-2 border border-dark rounded"
             type="search"
@@ -72,7 +70,7 @@ export default function Loan(props) {
         </div>
         {isLoading && <TablePlaceholder />}
         {!isLoading && (
-          <div className="">
+          <div className="overflow-auto">
             <TableExample>
               <thead>
                 <tr>

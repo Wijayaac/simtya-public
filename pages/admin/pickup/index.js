@@ -132,11 +132,11 @@ export default function Pickup(props) {
 
   return (
     <>
-      <div className="container px-5">
+      <div className="container px-1 px-md-5">
         <div className="text-center fs-3 fw-bold">
           <p>Pickup List</p>
         </div>
-        <div className="d-flex d-flex-column justify-content-end">
+        <div className="d-flex d-flex-column justify-content-end my-2 my-md-0">
           <input
             className="p-2 border border-dark rounded"
             type="search"
@@ -239,7 +239,7 @@ export default function Pickup(props) {
         <div className="container mt-5">
           {isLoading && <TablePlaceholder />}
           {!isLoading && (
-            <div className="">
+            <div className="overflow-auto">
               <TableExample>
                 <thead>
                   <tr>
@@ -276,12 +276,12 @@ export default function Pickup(props) {
                           <td>{item.ready === false ? "Pending" : "Ready"}</td>
                           <td>
                             <button
-                              className="btn btn-warning me-1"
+                              className="btn btn-warning my-1 mx-1"
                               onClick={handleDetail.bind(this, item.id)}>
                               <i className="bi bi-eye"></i>
                             </button>
                             <button
-                              className="btn btn-danger ms-1"
+                              className="btn btn-danger my-1 mx-1"
                               onClick={handleDelete.bind(this, item.id)}>
                               <i className="bi bi-trash"></i>
                             </button>

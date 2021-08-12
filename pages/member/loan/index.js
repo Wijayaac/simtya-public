@@ -156,7 +156,14 @@ export default function Loan(props) {
       <div className="container">
         <div className="text-center fs-2 fw-bold">
           <p>Loan List</p>
-          <div className="container"></div>
+        </div>
+        <div className="d-flex d-flex-column justify-content-end">
+          <input
+            className="p-2 border border-dark rounded my-2"
+            type="search"
+            placeholder="Search vehicle name"
+            onChange={(e) => setSearchTerms(e.target.value)}
+          />
         </div>
         <Modal buttonLabel="Loan Motorcycle" className="my-2">
           <form onSubmit={handleSubmit}>
@@ -253,63 +260,59 @@ export default function Loan(props) {
             </div>
           </form>
         </Modal>
-        <div className="container mt-5 row row-cols-md-2">
+        <div className="mt-1 mt-md-5 row row-cols-md-2">
           {isLoading && <TablePlaceholder />}
           {!isLoading && (
-            <div className="my-2 col-6">
-              <input
-                className="p-2 border border-dark rounded"
-                type="search"
-                placeholder="Search vehicle name"
-                onChange={(e) => setSearchTerms(e.target.value)}
-              />
-              <TableExample>
-                <thead>
-                  <tr>
-                    <th>Vehicle</th>
-                    <th>Purpose</th>
-                    <th>Start At</th>
-                    <th>End At</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loan.list
-                    .filter((item) => {
-                      if (searchTerms === "") {
-                        return item;
-                      } else if (
-                        item.name
-                          .toLowerCase()
-                          .includes(searchTerms.toLowerCase())
-                      ) {
-                        return item;
-                      }
-                    })
-                    .map((item) => {
-                      return (
-                        <tr key={item.id}>
-                          <td>{item.name}</td>
-                          <td>{item.purpose}</td>
-                          <td>{moment(item.start_at).format("DD MMMM")}</td>
-                          <td>{moment(item.end_at).format("DD MMMM")}</td>
-                          <td>
-                            <button
-                              className="btn btn-warning me-1"
-                              onClick={handleDetail.bind(this, item.id)}>
-                              <i className="bi bi-eye"></i>
-                            </button>
-                            <button
-                              className="btn btn-danger ms-1"
-                              onClick={handleDelete.bind(this, item.id)}>
-                              <i className="bi bi-trash"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </TableExample>
+            <div className="my-2 col">
+              <div className="overflow-auto">
+                <TableExample>
+                  <thead>
+                    <tr>
+                      <th>Vehicle</th>
+                      <th>Purpose</th>
+                      <th>Start At</th>
+                      <th>End At</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loan.list
+                      .filter((item) => {
+                        if (searchTerms === "") {
+                          return item;
+                        } else if (
+                          item.name
+                            .toLowerCase()
+                            .includes(searchTerms.toLowerCase())
+                        ) {
+                          return item;
+                        }
+                      })
+                      .map((item) => {
+                        return (
+                          <tr key={item.id}>
+                            <td>{item.name}</td>
+                            <td>{item.purpose}</td>
+                            <td>{moment(item.start_at).format("DD MMMM")}</td>
+                            <td>{moment(item.end_at).format("DD MMMM")}</td>
+                            <td>
+                              <button
+                                className="btn btn-warning my-1 mx-1"
+                                onClick={handleDetail.bind(this, item.id)}>
+                                <i className="bi bi-eye"></i>
+                              </button>
+                              <button
+                                className="btn btn-danger my-1 mx-1"
+                                onClick={handleDelete.bind(this, item.id)}>
+                                <i className="bi bi-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </TableExample>
+              </div>
               <ReactPaginate
                 marginPagesDisplayed={2}
                 pageRangeDisplayed={5}
@@ -332,7 +335,7 @@ export default function Loan(props) {
               />
             </div>
           )}
-          <div className="col-6 mt-n3">
+          <div className="col my-2 mt-md-n3">
             <WeeklyCalendar week={new Date()}>
               <p className="fs-4 text-center">Booking List</p>
               <WeeklyContainer>

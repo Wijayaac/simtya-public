@@ -113,14 +113,14 @@ export default function VehicleEdit(props) {
 
   return (
     <>
-      <div className="container row row-cols-md-2 gutters">
+      <div className="container row row-cols-md-2">
         {isLoading && (
-          <div className="col-6">
+          <div className="col">
             <FormPlaceholder />
           </div>
         )}
         {!isLoading && (
-          <div className="col-6">
+          <div className="col">
             <div className="d-flex flex-row justify-content-between mt-3">
               <p className="fs-3 fw-bold">Edit Profile</p>
               <button onClick={handleBack.bind(this)} className="btn btn-info">
@@ -139,6 +139,7 @@ export default function VehicleEdit(props) {
                   onChange={(e) => setName(e.target.value)}
                   type="text"
                   className="form-control"
+                  id="inputName"
                 />
               </div>
               <div className="mb-3">
@@ -152,6 +153,7 @@ export default function VehicleEdit(props) {
                   onChange={(e) => setEmail(e.target.value)}
                   type="email"
                   className="form-control"
+                  id="inputEmail"
                 />
               </div>
               <div className="mb-3">
@@ -165,6 +167,7 @@ export default function VehicleEdit(props) {
                   onChange={(e) => setUsername(e.target.value)}
                   type="text"
                   className="form-control"
+                  id="inputUsername"
                 />
               </div>
               <div className="mb-3">
@@ -214,12 +217,12 @@ export default function VehicleEdit(props) {
           </div>
         )}
         {isLoading && (
-          <div className="col-6">
+          <div className="col">
             <ArticlePlaceholder />
           </div>
         )}
         {!isLoading && (
-          <div className="col-6">
+          <div className="col">
             <div className="card card-custom mt-4">
               <div className="card-body">
                 <div className="account-settings">

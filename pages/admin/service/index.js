@@ -61,11 +61,11 @@ export default function Service(props) {
   };
   return (
     <>
-      <div className="container px-5">
-        <div className="text-center fs-3 fw-bold">
+      <div className="container px-1 px-md-5">
+        <div className="text-center fs-3 fw-bold my-2">
           <p>Service List</p>
         </div>
-        <div className="d-flex d-flex-column justify-content-end">
+        <div className="d-flex d-flex-column justify-content-end my-2">
           <input
             onChange={(e) => setSearchTerms(e.target.value)}
             type="search"
@@ -75,7 +75,7 @@ export default function Service(props) {
         </div>
         {isLoading && <TablePlaceholder />}
         {!isLoading && (
-          <div className="">
+          <div className="overflow-auto">
             <TableExample>
               <thead>
                 <tr>

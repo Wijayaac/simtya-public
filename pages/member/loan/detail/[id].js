@@ -102,15 +102,15 @@ export default function LoanEdit(props) {
 
   return (
     <>
-      <div className="container row row-cols-md-2">
+      <div className="container row row-cols-sm-1 row-cols-md-2">
         {isLoading && (
-          <div className="col-6">
+          <div className="col">
             <FormPlaceholder />
           </div>
         )}
         {!isLoading && (
-          <div className="col-6">
-            <div className="d-flex flex-row justify-content-between mt-3">
+          <div className="col">
+            <div className="d-flex flex-row justify-content-between mt-3 my-2">
               <p className="fs-3 fw-bold">Edit Loan Schedule</p>
               <button onClick={handleBack.bind(this)} className="btn btn-info">
                 <i className="bi bi-arrow-left-circle"></i> Back to Loan

@@ -60,16 +60,16 @@ export default function ServiceDetail(props) {
     <>
       <div className="container row row-cols-md-2">
         {isLoading && (
-          <div className="col-6">
+          <div className="col">
             <FormPlaceholder />
           </div>
         )}
         {!isLoading && (
-          <div className="col-6">
-            <div className="d-flex flex-row justify-content-between mt-3">
-              <p className="fs-3 fw-bold">Details Loan</p>
+          <div className="col">
+            <div className="d-flex flex-row justify-content-between my-2 mt-3">
+              <p className="fs-3 fw-bold">Details Service</p>
               <button onClick={() => handleBack()} className="btn btn-info">
-                <i className="bi bi-arrow-left-circle"></i> Back to Loan
+                <i className="bi bi-arrow-left-circle"></i> Back to Service
               </button>
             </div>
             <form>
@@ -170,7 +170,7 @@ export default function ServiceDetail(props) {
             </form>
           </div>
         )}
-        <div className="col-6">
+        <div className="col">
           <div className="d-flex d-flex-row justify-content-center mt-3">
             <p className="fs-3 fw-bold">
               <i className="bi bi-clock-history me-5"></i>History

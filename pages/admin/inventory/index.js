@@ -128,7 +128,7 @@ export default function Inventory(props) {
         <div className="text-center fs-2 fw-bold">
           <p>Inventory List</p>
         </div>
-        <div className="d flex d-flex-column justify-content-end">
+        <div className="d flex d-flex-column justify-content-end my-2">
           <input
             className="p-2 border border-dark rounded"
             type="search"
@@ -324,7 +324,7 @@ export default function Inventory(props) {
                         <button
                           type="button"
                           onClick={handleDelete.bind(this, vehicle.id)}
-                          className="btn btn-danger mx-2">
+                          className="btn btn-danger my-1 mx-2">
                           <i className="bi bi-trash me-1"></i>
                           Delete
                         </button>
