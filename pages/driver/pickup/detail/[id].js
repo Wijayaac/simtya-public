@@ -124,7 +124,9 @@ export default function PickupDriverEdit(props) {
                 <ButtonGroup>
                   <Button
                     color="outline-success"
-                    onClick={() => setAccidents(true)}
+                    onClick={() => {
+                      setAccidents(true), setReady(false);
+                    }}
                     active={accidents}>
                     Yes
                   </Button>

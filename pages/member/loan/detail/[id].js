@@ -206,7 +206,7 @@ export default function LoanEdit(props) {
                 />
               </div>
               <div className="mb-3">
-                <label forHtml="inputYears" className="form-label">
+                <label forHtml="inputFinish" className="form-label">
                   Finish Date
                 </label>
                 <input
@@ -217,7 +217,7 @@ export default function LoanEdit(props) {
                   type="date"
                   name="end_date"
                   className="form-control"
-                  id="inputYears"
+                  id="inputFinish"
                 />
               </div>
               <div className="mb-3">
