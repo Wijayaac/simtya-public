@@ -87,6 +87,7 @@ export default function Login() {
               setPassword(e.target.value);
             }}
             required
+            autoComplete="on"
             type="password"
             className="form-control"
             id="floatingPassword"

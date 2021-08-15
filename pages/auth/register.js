@@ -73,6 +73,7 @@ export default function Register() {
         <div className="form-floating">
           <input
             name="password"
+            autoComplete="on"
             onChange={(e) => setPassword(e.target.value)}
             required
             type="password"
