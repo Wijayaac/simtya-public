@@ -17,9 +17,11 @@ import { parseJWT } from "../../utils/parseJWT";
 export default function Login() {
   const [email, setEmail] = useState([]);
   const [password, setPassword] = useState([]);
+  const [isLoading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/login`;
       const response = await axios.post(url, { email, password });
@@ -40,7 +42,8 @@ export default function Login() {
           break;
       }
     } catch (error) {
-      console.log("Error when redirecting into dashboard", error);
+      setLoading(true);
+      alert("Error when redirecting into dashboard", error);
     }
   };
 
@@ -90,7 +93,13 @@ export default function Login() {
         </div>
 
         <button className="w-100 btn btn-lg btn-primary" type="submit">
-          Login
+          {isLoading ? (
+            <div className="spinner-border text-light" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          ) : (
+            "Login"
+          )}
         </button>
       </form>
       <Link href="/auth/register">

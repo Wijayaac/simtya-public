@@ -12,9 +12,10 @@ export default function Register() {
   const [username, setUsername] = useState([]);
   const [email, setEmail] = useState([]);
   const [password, setPassword] = useState([]);
-
+  const [isLoading, setLoading] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/register`;
       await axios.post(url, {
@@ -22,9 +23,11 @@ export default function Register() {
         email,
         password,
       });
+      setLoading(false);
       router.push("/auth/login");
     } catch (error) {
-      console.log("Error creating new user", error);
+      setLoading(true);
+      alert("Error creating new user", error);
     }
   };
   return (
@@ -81,11 +84,17 @@ export default function Register() {
         </div>
 
         <button className="w-100 btn btn-lg btn-primary" type="submit">
-          Register
+          {isLoading ? (
+            <div className="spinner-border text-light" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          ) : (
+            "Register"
+          )}
         </button>
       </form>
       <Link href="/auth/login">
-        <a className="mt-2 fs-6 d-block">
+        <a className="mt-3 fs-6 d-block">
           <small>Already have account? Sign in here</small>
         </a>
       </Link>
