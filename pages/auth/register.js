@@ -53,10 +53,10 @@ export default function Register() {
             required
             type="email"
             className="form-control"
-            id="floatingInput"
+            id="floatingEmail"
             placeholder="name@example.com"
           />
-          <label htmlFor="floatingInput">Email Address</label>
+          <label htmlFor="floatingEmail">Email Address</label>
         </div>
         <div className="form-floating">
           <input
@@ -65,10 +65,10 @@ export default function Register() {
             required
             type="text"
             className="form-control"
-            id="floatingInput"
+            id="floatingUsername"
             placeholder="your unique username"
           />
-          <label htmlFor="floatingInput">Username</label>
+          <label htmlFor="floatingUsername">Username</label>
         </div>
         <div className="form-floating">
           <input

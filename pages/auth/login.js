@@ -43,7 +43,10 @@ export default function Login() {
       }
     } catch (error) {
       setLoading(true);
-      alert("Error when redirecting into dashboard", error);
+      alert(
+        "Error when redirecting into dashboard, check your username or passowrd",
+        error
+      );
     }
   };
 
@@ -72,7 +75,7 @@ export default function Login() {
             required
             type="email"
             className="form-control"
-            id="floatingInput"
+            id="floatingEmail"
             placeholder="name@example.com"
           />
           <label htmlFor="floatingInput">Email Address</label>
