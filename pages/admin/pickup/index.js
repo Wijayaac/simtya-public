@@ -272,12 +272,12 @@ export default function Pickup(props) {
                           <td>{item.name}</td>
                           <td>
                             {moment(item.start_at)
-                              .utcOffset(-480)
+                              .utcOffset(-240)
                               .format("DD MMMM ,HH:mm")}
                           </td>
                           <td>
                             {moment(item.end_at)
-                              .utcOffset(-480)
+                              .utcOffset(-240)
                               .format("HH:mm")}
                           </td>
                           <td>{item.route}</td>
