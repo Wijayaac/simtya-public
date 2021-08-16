@@ -99,9 +99,13 @@ export default function Pickup(props) {
                         <tr key={item.id}>
                           <td>{item.name}</td>
                           <td>
-                            {moment(item.start_at).format("DD MMMM ,HH:mm")}
+                            {moment(item.start_at)
+                              .utcOffset(0)
+                              .format("DD MMMM ,HH:mm")}
                           </td>
-                          <td>{moment(item.end_at).format("HH:mm")}</td>
+                          <td>
+                            {moment(item.end_at).utcOffset(0).format("HH:mm")}
+                          </td>
                           <td>{item.route}</td>
                           <td>{item.ready === false ? "Pending" : "Ready"}</td>
                           <td>
