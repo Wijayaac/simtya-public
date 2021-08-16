@@ -42,7 +42,7 @@ export default function Login() {
           break;
       }
     } catch (error) {
-      setLoading(true);
+      setLoading(false);
       alert(
         "Error when redirecting into dashboard, check your username or passowrd",
         error

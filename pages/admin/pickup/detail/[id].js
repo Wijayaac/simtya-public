@@ -161,6 +161,7 @@ export default function PickupEdit(props) {
                       defaultValue={moment(start).format("YYYY-MM-DDTHH:mm")}
                       type="datetime-local"
                       onChange={(e) => setStart(e.target.value)}
+                      className="form-control"
                     />
                   </div>
                   <div className="col">
@@ -173,6 +174,7 @@ export default function PickupEdit(props) {
                       defaultValue={moment(end).format("YYYY-MM-DDTHH:mm")}
                       type="datetime-local"
                       onChange={(e) => setEnd(e.target.value)}
+                      className="form-control"
                     />
                   </div>
                 </div>

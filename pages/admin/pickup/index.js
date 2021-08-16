@@ -195,6 +195,7 @@ export default function Pickup(props) {
                   </label>
                   <input
                     required
+                    className="form-control"
                     onChange={(e) => setStart(e.target.value)}
                     type="datetime-local"
                     value={start}
@@ -207,6 +208,7 @@ export default function Pickup(props) {
                   <input
                     value={end}
                     required
+                    className="form-control"
                     onChange={(e) => setEnd(e.target.value)}
                     type="datetime-local"
                   />
