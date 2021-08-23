@@ -72,7 +72,6 @@ export default function Service(props) {
   const [end, setEnd] = useState(
     moment(moment.now()).utcOffset(480).format("YYYY-MM-DDThh:mm")
   );
-  const [description, setDescription] = useState([]);
   const [type, setType] = useState([]);
   const [searchTerms, setSearchTerms] = useState("");
   const [message, setMessage] = useState("");
@@ -130,7 +129,6 @@ export default function Service(props) {
             start_at: start,
             end_at: end,
             type: type,
-            description: description,
           },
           {
             headers: {
@@ -241,17 +239,6 @@ export default function Service(props) {
                 type="text"
                 className="form-control"
               />
-            </div>
-            <div className="mb-3">
-              <label forHtml="inputDescription" className="form-label">
-                Description
-              </label>
-              <textarea
-                onChange={(e) => setDescription(e.target.value)}
-                name="description"
-                required
-                className="form-control"
-                id="inputDescription"></textarea>
             </div>
             <div className="d-flex justify-content-end">
               <button type="submit" className="btn btn-primary mx-2">

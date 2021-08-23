@@ -76,8 +76,6 @@ export default function ServiceEdit(props) {
         {
           id: id,
           type: type,
-          start_at: start,
-          end_at: end,
           description: description,
           vehicle: select,
           start_km: startKm,
@@ -104,7 +102,7 @@ export default function ServiceEdit(props) {
   };
   return (
     <>
-      <div className="container row row-cols-md-1">
+      <div className="container row row-cols-1 row-cols-md-2 ">
         {isLoading && (
           <div className="col">
             <FormPlaceholder />
@@ -202,6 +200,7 @@ export default function ServiceEdit(props) {
                     setStart(e.target.value);
                   }}
                   type="date"
+                  disabled
                   name="start_date"
                   className="form-control"
                   id="inputYears"
@@ -217,6 +216,7 @@ export default function ServiceEdit(props) {
                     setEnd(e.target.value);
                   }}
                   type="date"
+                  disabled
                   name="end_date"
                   className="form-control"
                   id="inputYears"

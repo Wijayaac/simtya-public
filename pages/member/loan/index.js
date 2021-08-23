@@ -65,7 +65,6 @@ export default function Loan(props) {
   const [end, setEnd] = useState(
     moment(moment.now()).utcOffset(480).format("YYYY-MM-DDThh:mm")
   );
-  const [description, setDescription] = useState([]);
   const [searchTerms, setSearchTerms] = useState("");
   const [isLoading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -103,7 +102,6 @@ export default function Loan(props) {
             purpose: purpose,
             start_at: start,
             end_at: end,
-            description: description,
             accidents: false,
           },
           {
@@ -237,19 +235,6 @@ export default function Loan(props) {
             <small className="text-danger">
               {message ? `*${message}` : ""}
             </small>
-            <div className="mb-3">
-              <label forHtml="inputDescription" className="form-label">
-                Description
-              </label>
-              <textarea
-                onChange={(e) => {
-                  setDescription(e.target.value);
-                }}
-                required
-                name="description"
-                className="form-control"
-                id="inputDescription"></textarea>
-            </div>
             <div className="d-flex justify-content-end">
               <button type="submit" className="btn btn-primary mx-2">
                 Submit

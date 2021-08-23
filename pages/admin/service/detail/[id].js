@@ -43,6 +43,8 @@ export async function getServerSideProps(ctx) {
 
 export default function ServiceDetail(props) {
   const { service } = props;
+  const { history } = props;
+  console.log(service);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -52,7 +54,6 @@ export default function ServiceDetail(props) {
     };
   }, []);
 
-  const { history } = props;
   const handleBack = () => {
     router.push("/admin/service");
   };

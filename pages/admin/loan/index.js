@@ -26,6 +26,7 @@ export async function getServerSideProps(ctx) {
   );
   return {
     props: {
+      token: token,
       loan: loan.data,
     },
   };
@@ -33,7 +34,8 @@ export async function getServerSideProps(ctx) {
 
 export default function Loan(props) {
   const { loan } = props;
-
+  const { token } = props;
+  console.log(token);
   const [searchTerms, setSearchTerms] = useState("");
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
@@ -44,6 +46,21 @@ export default function Loan(props) {
   }, []);
   const handleDetail = (id) => {
     router.push(`/admin/loan/detail/${id}`);
+  };
+  const handleConfirm = (id) => {
+    let confirmation = confirm("Are you sure this motorcycle was back ?");
+    if (confirmation) {
+      try {
+        axios
+          .put(`${process.env.NEXT_PUBLIC_API_URL}/admin/loan/confirm/${id}`, {
+            headers: { Authorization: token },
+          })
+          .then(({ success }) => alert("Thanks for the confirmation"));
+      } catch (error) {
+        alert(error ? "Oops you hit an error see in your console" : "");
+        console.log(error);
+      }
+    }
   };
   const handlePagination = (page) => {
     const path = router.pathname;
@@ -115,9 +132,17 @@ export default function Loan(props) {
                         <td>{item.accidents ? "Kecelakaan" : "Normal"}</td>
                         <td>
                           <button
-                            className="btn btn-warning me-1"
+                            className="btn btn-warning mx-1"
                             onClick={handleDetail.bind(this, item.id)}>
                             <i className="bi bi-eye"></i>
+                          </button>
+                          <button
+                            className="btn btn-success mx-1"
+                            disabled={
+                              item.finish === null ? false : item.finish
+                            }
+                            onClick={handleConfirm.bind(this, item.id)}>
+                            <i className="bi bi-check"></i>
                           </button>
                         </td>
                       </tr>

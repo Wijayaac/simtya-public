@@ -49,12 +49,12 @@ export default function LoanEdit(props) {
   const [accidents, setAccidents] = useState(loan[0].accidents);
   const [start, setStart] = useState(loan[0].start_at);
   const [end, setEnd] = useState(loan[0].end_at);
-  const [description, setDescription] = useState(loan[0].description);
+  const [description, setDescription] = useState("");
   const [select, setSelect] = useState(loan[0].id_vehicle);
   const [startKm, setStartKm] = useState(loan[0].start_km);
   const [endKm, setEndKm] = useState(loan[0].end_km);
   const [isLoading, setLoading] = useState(true);
-
+  const [isFinish, setFinish] = useState(loan[0].finish || false);
   let id_vehicle = vehicle.map(({ id_vehicle }) => id);
   let name = vehicle.map(({ name }) => name);
 
@@ -75,12 +75,11 @@ export default function LoanEdit(props) {
           id: id,
           purpose: purpose,
           accidents: accidents,
-          start_at: start,
-          end_at: end,
           description: description,
           id_vehicle: select,
           start_km: startKm,
           end_km: endKm,
+          finish: isFinish,
         },
         {
           headers: {
@@ -203,6 +202,7 @@ export default function LoanEdit(props) {
                   name="start_date"
                   className="form-control"
                   id="inputYears"
+                  disabled
                 />
               </div>
               <div className="mb-3">
@@ -218,25 +218,48 @@ export default function LoanEdit(props) {
                   name="end_date"
                   className="form-control"
                   id="inputFinish"
+                  disabled
                 />
               </div>
               <div className="mb-3">
-                <label className="form-label d-block">Accidents</label>
-                <ButtonGroup>
-                  <Button
-                    color="outline-success"
-                    onClick={() => setAccidents(true)}
-                    active={accidents === true}>
-                    Yes
-                  </Button>
-                  <Button
-                    color="outline-danger"
-                    onClick={() => setAccidents(false)}
-                    active={accidents === false}>
-                    No
-                  </Button>
-                </ButtonGroup>
-                <p>
+                <div className="row row-cols-1 row-cols-md-2">
+                  <div className="col">
+                    <label className="form-label d-block">Accidents</label>
+                    <ButtonGroup>
+                      <Button
+                        color="outline-success"
+                        onClick={() => setAccidents(true)}
+                        active={accidents === true}>
+                        Yes
+                      </Button>
+                      <Button
+                        color="outline-danger"
+                        onClick={() => setAccidents(false)}
+                        active={accidents === false}>
+                        No
+                      </Button>
+                    </ButtonGroup>
+                  </div>
+                  <div className="col">
+                    <label className="form-label d-block">Finish Loan ?</label>
+                    <ButtonGroup>
+                      <Button
+                        color="outline-info"
+                        onClick={() => setFinish(true)}
+                        active={isFinish}>
+                        Finish
+                      </Button>
+                      <Button
+                        color="outline-warning"
+                        onClick={() => setFinish(false)}
+                        active={!isFinish}>
+                        Not Yet
+                      </Button>
+                    </ButtonGroup>
+                  </div>
+                </div>
+
+                <p className="my-2">
                   {accidents === true
                     ? "Add your accidents into description bellow"
                     : ""}
@@ -251,6 +274,7 @@ export default function LoanEdit(props) {
                   }}
                   name="description"
                   type="file"
+                  disabled={!accidents}
                   className="form-control"
                   id="inputPhoto"></textarea>
               </div>

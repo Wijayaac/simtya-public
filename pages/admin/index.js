@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Pie, Bar } from "react-chartjs-2";
 import { saveAs } from "file-saver";
+import moment from "moment";
 
 // utils auth library
 import { HandleAdminSSR } from "../../utils/auth";
 // Layout Component
 import Admin from "../../layouts/Admin";
+import { months } from "moment";
 
 export async function getServerSideProps(ctx) {
   const token = await HandleAdminSSR(ctx);
@@ -60,6 +62,10 @@ export default function Dashboard(props) {
   const { pickup } = props;
   const { service } = props;
   const [isLoading, setLoading] = useState(true);
+  const [inventoryMonth, setInventoryMonth] = useState("");
+  const [loanMonth, setLoanMonth] = useState("");
+  const [pickupMonth, setPickupMonth] = useState("");
+  const [serviceMonth, setServiceMonth] = useState("");
 
   let inventoryName = inventory.map(({ type }) => type);
   let inventoryCount = inventory.map(({ count }) => count);
@@ -132,7 +138,6 @@ export default function Dashboard(props) {
       ],
     },
   };
-
   useEffect(() => {
     setLoading(false);
     return () => {
@@ -140,10 +145,11 @@ export default function Dashboard(props) {
     };
   }, []);
 
-  const downloadPdf = (type) => {
+  const downloadPdf = (type, month) => {
+    if (!month) return alert("Pick the month of the report");
     setLoading(true);
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/admin/${type}-pdf`, {
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/admin/${type}-pdf/${month}`, {
         responseType: "blob",
       })
       .then((res) => {
@@ -151,6 +157,21 @@ export default function Dashboard(props) {
         saveAs(pdfBlob, `${type}.pdf`);
         setLoading(false);
       });
+  };
+  const MONTHS = () => {
+    const months = [];
+    const monthStart = moment();
+    const monthName = moment();
+    const monthEnd = moment().subtract(11, "month");
+    while (monthEnd.diff(monthStart, "months") <= 0) {
+      months.push({
+        id: monthStart.format("YYYY-MM"),
+        month: monthName.format("MMMM"),
+      });
+      monthStart.subtract(1, "month");
+      monthName.subtract(1, "month");
+    }
+    return months;
   };
   return (
     <>
@@ -162,7 +183,27 @@ export default function Dashboard(props) {
                 Inventory
               </div>
               <div className="card-body rounded bg-white">
-                <h5 className="card-title">Report Chart</h5>
+                <div className="row d-flex align-items-center">
+                  <div className="col">
+                    <h6 className="card-title">Month : </h6>
+                  </div>
+                  <div className="col">
+                    <select
+                      name="month"
+                      id=""
+                      className="form-select"
+                      onChange={(e) => setInventoryMonth(e.target.value)}>
+                      <option defaultValue>---------</option>
+                      {MONTHS().map((item) => {
+                        return (
+                          <option key={item.id} value={item.id}>
+                            {item.month}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                </div>
                 <p className="card-text">
                   <Pie data={chartInventory} />
                 </p>
@@ -170,7 +211,7 @@ export default function Dashboard(props) {
             </div>
             <button
               className="btn btn-outline-primary btn-block "
-              onClick={downloadPdf.bind(this, "inventory")}
+              onClick={downloadPdf.bind(this, "inventory", inventoryMonth)}
               disabled={isLoading}>
               Download Inventory Report
             </button>
@@ -181,7 +222,27 @@ export default function Dashboard(props) {
                 Pickup
               </div>
               <div className="card-body rounded bg-white">
-                <h5 className="card-title">Report Chart</h5>
+                <div className="row d-flex align-items-center">
+                  <div className="col">
+                    <h6 className="card-title">Month : </h6>
+                  </div>
+                  <div className="col">
+                    <select
+                      name="month"
+                      id=""
+                      className="form-select"
+                      onChange={(e) => setPickupMonth(e.target.value)}>
+                      <option defaultValue>---------</option>
+                      {MONTHS().map((item) => {
+                        return (
+                          <option key={item.id} defaultValue={item.id}>
+                            {item.month}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                </div>
                 <p className="card-text">
                   <Bar data={chartPickup} options={options} />
                 </p>
@@ -189,7 +250,7 @@ export default function Dashboard(props) {
             </div>
             <button
               className="btn btn-outline-success btn-block"
-              onClick={downloadPdf.bind(this, "pickup")}
+              onClick={downloadPdf.bind(this, "pickup", pickupMonth)}
               disabled={isLoading}>
               Download Pickup Report
             </button>
@@ -200,7 +261,27 @@ export default function Dashboard(props) {
                 Loan
               </div>
               <div className="card-body rounded bg-body">
-                <h5 className="card-title">Report Chart</h5>
+                <div className="row d-flex align-items-center">
+                  <div className="col">
+                    <h6 className="card-title">Month : </h6>
+                  </div>
+                  <div className="col">
+                    <select
+                      name="month"
+                      id=""
+                      className="form-select"
+                      onChange={(e) => setLoanMonth(e.target.value)}>
+                      <option defaultValue>---------</option>
+                      {MONTHS().map((item) => {
+                        return (
+                          <option key={item.id} defaultValue={item.id}>
+                            {item.month}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                </div>
                 <p className="card-text">
                   <Bar data={chartLoan} options={options} />
                 </p>
@@ -208,7 +289,7 @@ export default function Dashboard(props) {
             </div>
             <button
               className="btn btn-outline-warning btn-block"
-              onClick={downloadPdf.bind(this, "loan")}
+              onClick={downloadPdf.bind(this, "loan", loanMonth)}
               disabled={isLoading}>
               Download Loan Report
             </button>
@@ -219,7 +300,27 @@ export default function Dashboard(props) {
                 Service
               </div>
               <div className="card-body rounded bg-white">
-                <h5 className="card-title">Report Chart</h5>
+                <div className="row d-flex align-items-center">
+                  <div className="col">
+                    <h6 className="card-title">Month : </h6>
+                  </div>
+                  <div className="col">
+                    <select
+                      name="month"
+                      id=""
+                      className="form-select"
+                      onChange={(e) => setServiceMonth(e.target.value)}>
+                      <option defaultValue>---------</option>
+                      {MONTHS().map((item) => {
+                        return (
+                          <option key={item.id} defaultValue={item.id}>
+                            {item.month}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                </div>
                 <p className="card-text">
                   <Pie data={chartService} />
                 </p>
@@ -227,7 +328,7 @@ export default function Dashboard(props) {
             </div>
             <button
               className="btn btn-outline-danger btn-block"
-              onClick={downloadPdf.bind(this, "service")}
+              onClick={downloadPdf.bind(this, "service", serviceMonth)}
               disabled={isLoading}>
               Download Service Report
             </button>
