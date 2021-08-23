@@ -3,10 +3,11 @@ import axios from "axios";
 import moment from "moment";
 import router from "next/router";
 import ReactPaginate from "react-paginate";
-
+import { Button, ButtonGroup } from "reactstrap";
 // utils auth library
 import { HandleAdminSSR } from "../../../utils/auth";
 // Components
+import Confirm from "../../../components/Confirm";
 import TableExample from "../../../components/Tables";
 import TablePlaceholder from "../../../components/Skeleton/TablePlaceholder";
 // Layout
@@ -17,7 +18,7 @@ export async function getServerSideProps(ctx) {
   const page = ctx.query.page || 1;
 
   const loan = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/loanlist/${page}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/loan-list/${page}`,
     {
       headers: {
         Authorization: token,
@@ -35,9 +36,10 @@ export async function getServerSideProps(ctx) {
 export default function Loan(props) {
   const { loan } = props;
   const { token } = props;
-  console.log(token);
   const [searchTerms, setSearchTerms] = useState("");
   const [isLoading, setLoading] = useState(true);
+  const [description, setDescription] = useState("");
+  const [finish, setFinish] = useState(false);
   useEffect(() => {
     setLoading(false);
     return () => {
@@ -47,19 +49,28 @@ export default function Loan(props) {
   const handleDetail = (id) => {
     router.push(`/admin/loan/detail/${id}`);
   };
-  const handleConfirm = (id) => {
-    let confirmation = confirm("Are you sure this motorcycle was back ?");
-    if (confirmation) {
-      try {
-        axios
-          .put(`${process.env.NEXT_PUBLIC_API_URL}/admin/loan/confirm/${id}`, {
+  const handleConfirm = (e, id, vehicle) => {
+    e.preventDefault();
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_API_URL}/admin/loan/confirm/${id}`,
+          {
+            finish: finish,
+            description: description,
+            vehicle: vehicle,
+          },
+          {
             headers: { Authorization: token },
-          })
-          .then(({ success }) => alert("Thanks for the confirmation"));
-      } catch (error) {
-        alert(error ? "Oops you hit an error see in your console" : "");
-        console.log(error);
-      }
+          }
+        )
+        .then(({ success }) => {
+          alert("thanks for your confirmation");
+          router.reload();
+        });
+    } catch (error) {
+      alert(error ? "Oops you hit an error see in your console" : "");
+      console.log(error);
     }
   };
   const handlePagination = (page) => {
@@ -73,7 +84,7 @@ export default function Loan(props) {
   };
   return (
     <>
-      <div className="container px-1 px-md-5">
+      <div className="container px-1 px-md-5 mt-1 mt-md-5 mb-md-5">
         <div className="text-center fs-3 fw-bold">
           <p>Loan List</p>
         </div>
@@ -97,6 +108,7 @@ export default function Loan(props) {
                   <th>End At</th>
                   <th>Accidents</th>
                   <th>Details</th>
+                  <th>Confirm</th>
                 </tr>
               </thead>
               <tbody>
@@ -136,14 +148,82 @@ export default function Loan(props) {
                             onClick={handleDetail.bind(this, item.id)}>
                             <i className="bi bi-eye"></i>
                           </button>
-                          <button
-                            className="btn btn-success mx-1"
+                        </td>
+                        <td>
+                          <Confirm
+                            buttonLabel="Check"
                             disabled={
                               item.finish === null ? false : item.finish
                             }
-                            onClick={handleConfirm.bind(this, item.id)}>
-                            <i className="bi bi-check"></i>
-                          </button>
+                            className={`btn ${
+                              item.finish ? "d-none" : ""
+                            } mx-1 my-2`}>
+                            <form
+                              onSubmit={(e) =>
+                                handleConfirm(e, item.id, item.id_vehicle)
+                              }>
+                              <div className="mb-3">
+                                <label
+                                  forHtml="inputDesc"
+                                  className="form-label">
+                                  Confirm the condition
+                                </label>
+                                <br />
+                                <ButtonGroup>
+                                  <Button
+                                    type="reset"
+                                    color="outline-info"
+                                    onClick={() => setFinish(true)}
+                                    active={finish}>
+                                    All Okay !
+                                  </Button>
+                                  <Button
+                                    color="outline-warning"
+                                    onClick={() => setFinish(false)}
+                                    active={!finish}>
+                                    There is a Problem
+                                  </Button>
+                                </ButtonGroup>
+                                <p className="my-2">
+                                  {!finish
+                                    ? "Add your notes into description bellow"
+                                    : ""}
+                                </p>
+                                <label
+                                  forHtml="inputDesc"
+                                  className="form-label">
+                                  Description
+                                </label>
+                                <textarea
+                                  name="description"
+                                  onChange={(e) => {
+                                    setDescription(e.target.value);
+                                  }}
+                                  disabled={finish}
+                                  className="form-control"
+                                  id="inputDesc"></textarea>
+                              </div>
+                              <div className="d-flex justify-content-end">
+                                <button
+                                  className="btn btn-primary"
+                                  type="submit"
+                                  disabled={isLoading}>
+                                  {isLoading && (
+                                    <span
+                                      className="spinner-border spinner-border-sm"
+                                      role="status"
+                                      aria-hidden="true"></span>
+                                  )}
+                                  {!isLoading && <span>Confirm</span>}
+                                </button>
+                                <button
+                                  type="reset"
+                                  className="btn btn-outline-dark mx-2">
+                                  Clear
+                                </button>
+                              </div>
+                            </form>
+                          </Confirm>
                         </td>
                       </tr>
                     );

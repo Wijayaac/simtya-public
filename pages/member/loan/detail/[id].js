@@ -264,7 +264,7 @@ export default function LoanEdit(props) {
                     ? "Add your accidents into description bellow"
                     : ""}
                 </p>
-                <label forHtml="inputPhoto" className="form-label">
+                <label forHtml="inputDesc" className="form-label">
                   Description
                 </label>
                 <textarea
@@ -273,10 +273,9 @@ export default function LoanEdit(props) {
                     setDescription(e.target.value);
                   }}
                   name="description"
-                  type="file"
                   disabled={!accidents}
                   className="form-control"
-                  id="inputPhoto"></textarea>
+                  id="inputDesc"></textarea>
               </div>
               <div className="d-flex justify-content-end">
                 <button

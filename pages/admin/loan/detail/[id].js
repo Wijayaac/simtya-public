@@ -25,7 +25,7 @@ export async function getServerSideProps(ctx) {
     }
   );
   const history = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/loanhistory/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/loan-history/${id}`,
     {
       headers: {
         Authorization: token,
@@ -115,9 +115,7 @@ export default function LoanDetail(props) {
                 />
               </div>
               <div className="mb-3">
-                <label forHtml="inputPurpose" className="form-label">
-                  Purpose
-                </label>
+                <label className="form-label">Purpose</label>
                 <input
                   disabled
                   defaultValue={loan[0].purpose}
@@ -128,9 +126,7 @@ export default function LoanDetail(props) {
                 />
               </div>
               <div className="mb-3">
-                <label forHtml="inputYears" className="form-label">
-                  Start Date
-                </label>
+                <label className="form-label">Start Date</label>
                 <input
                   disabled
                   defaultValue={moment(loan[0].start_at).format("YYYY-MM-DD")}
@@ -141,9 +137,7 @@ export default function LoanDetail(props) {
                 />
               </div>
               <div className="mb-3">
-                <label forHtml="inputYears" className="form-label">
-                  Finish Date
-                </label>
+                <label className="form-label">Finish Date</label>
                 <input
                   disabled
                   defaultValue={moment(loan[0].end_at).format("YYYY-MM-DD")}
@@ -154,9 +148,7 @@ export default function LoanDetail(props) {
                 />
               </div>
               <div className="mb-3">
-                <label forHtml="inputPhoto" className="form-label">
-                  Description
-                </label>
+                <label className="form-label">Description</label>
                 <textarea
                   disabled
                   defaultValue={loan[0].description}
