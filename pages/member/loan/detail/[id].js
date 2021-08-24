@@ -15,14 +15,6 @@ import FormPlaceholder from "../../../../components/Skeleton/FormPlaceholder";
 export async function getServerSideProps(ctx) {
   const token = await HandleMemberSSR(ctx);
   const { id } = ctx.query;
-  const vehicle = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/vehicle/motorcycle`,
-    {
-      headers: {
-        Authorization: token,
-      },
-    }
-  );
   const loan = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/member/loan/${id}`,
     {
@@ -35,29 +27,24 @@ export async function getServerSideProps(ctx) {
     props: {
       token: token,
       loan: loan.data.data,
-      vehicle: vehicle.data.data,
     },
   };
 }
 export default function LoanEdit(props) {
-  const { vehicle } = props;
   const { loan } = props;
   const { token } = props;
 
-  const [id, setId] = useState(loan[0].id);
+  const id = loan[0].id;
+  const vehicle = loan[0].id_vehicle;
   const [purpose, setPurpose] = useState(loan[0].purpose);
   const [accidents, setAccidents] = useState(loan[0].accidents);
-  const [start, setStart] = useState(loan[0].start_at);
-  const [end, setEnd] = useState(loan[0].end_at);
-  const [description, setDescription] = useState("");
-  const [select, setSelect] = useState(loan[0].id_vehicle);
+  const start = loan[0].start_at;
+  const end = loan[0].end_at;
+  const [description, setDescription] = useState(loan[0].description);
   const [startKm, setStartKm] = useState(loan[0].start_km);
   const [endKm, setEndKm] = useState(loan[0].end_km);
   const [isLoading, setLoading] = useState(true);
   const [isFinish, setFinish] = useState(loan[0].finish || false);
-  let id_vehicle = vehicle.map(({ id_vehicle }) => id);
-  let name = vehicle.map(({ name }) => name);
-
   useEffect(() => {
     setLoading(false);
     return () => {
@@ -76,10 +63,10 @@ export default function LoanEdit(props) {
           purpose: purpose,
           accidents: accidents,
           description: description,
-          id_vehicle: select,
           start_km: startKm,
           end_km: endKm,
           finish: isFinish,
+          vehicle: vehicle,
         },
         {
           headers: {
@@ -149,32 +136,6 @@ export default function LoanEdit(props) {
                 </div>
               </div>
               <div className="mb-3">
-                <label htmlFor="selectVehicle" className="form-label">
-                  Vehicle
-                </label>
-                <select
-                  id="selectVehicle"
-                  onChange={(e) => {
-                    setSelect(e.target.value);
-                  }}
-                  className="form-select"
-                  aria-label="select vehicle"
-                  defaultValue={
-                    select === id_vehicle[0] ? name[0] : "Select one Vehicle"
-                  }>
-                  {vehicle.map((item) => {
-                    return (
-                      <option
-                        key={item.id}
-                        className="text-capitalize"
-                        value={item.id}>
-                        {item.name}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-              <div className="mb-3">
                 <label forHtml="inputPurpose" className="form-label">
                   Purpose
                 </label>
@@ -195,9 +156,6 @@ export default function LoanEdit(props) {
                 </label>
                 <input
                   defaultValue={moment(start).format("YYYY-MM-DD")}
-                  onChange={(e) => {
-                    setStart(e.target.value);
-                  }}
                   type="date"
                   name="start_date"
                   className="form-control"
@@ -211,9 +169,6 @@ export default function LoanEdit(props) {
                 </label>
                 <input
                   defaultValue={moment(end).format("YYYY-MM-DD")}
-                  onChange={(e) => {
-                    setEnd(e.target.value);
-                  }}
                   type="date"
                   name="end_date"
                   className="form-control"

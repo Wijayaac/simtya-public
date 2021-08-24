@@ -27,7 +27,7 @@ export async function getServerSideProps(ctx) {
   const page = ctx.query.page || 1;
   const { sub } = parseJWT(token);
   const vehicle = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/vehicle/motorcycle`,
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/vehicle-ready/motorcycle`,
     { headers: { Authorization: token } }
   );
 
