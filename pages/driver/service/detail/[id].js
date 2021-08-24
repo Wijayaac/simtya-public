@@ -14,14 +14,6 @@ import FormPlaceholder from "../../../../components/Skeleton/FormPlaceholder";
 export async function getServerSideProps(ctx) {
   const token = await HandleDriverSSR(ctx);
   const { id } = ctx.query;
-  const vehicle = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/vehicle/motorcycle`,
-    {
-      headers: {
-        Authorization: token,
-      },
-    }
-  );
   const service = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/driver/servicedetail/${id}`,
     {
@@ -34,18 +26,16 @@ export async function getServerSideProps(ctx) {
     props: {
       token: token,
       service: service.data.data,
-      vehicle: vehicle.data.data,
     },
   };
 }
 export default function ServiceEdit(props) {
   const { token } = props;
-  const { vehicle } = props;
   const { service } = props;
 
-  const [id, setId] = useState(service[0].id);
-  const [select, setSelect] = useState(service[0].id_vehicle);
-  const [start, setStart] = useState(service[0].start_at);
+  const id = service[0].id;
+  const select = service[0].id_vehicle;
+  const start = service[0].start_at;
   const [end, setEnd] = useState(service[0].end_at);
   const [startKm, setStartKm] = useState(service[0].start_km);
   const [endKm, setEndKm] = useState(service[0].end_km);
@@ -56,15 +46,12 @@ export default function ServiceEdit(props) {
   const [isLoading, setLoading] = useState(true);
   const [isFinish, setFinish] = useState(true);
 
-  let id_vehicle = vehicle.map(({ id }) => id);
-  let name = vehicle.map(({ name }) => name);
-
   useEffect(() => {
     setLoading(false);
     return () => {
       setLoading(false);
     };
-  }, [select]);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -82,6 +69,7 @@ export default function ServiceEdit(props) {
           end_km: endKm,
           fee: fee,
           part: part,
+          finish: isFinish,
         },
         {
           headers: {
@@ -150,32 +138,6 @@ export default function ServiceEdit(props) {
                 </div>
               </div>
               <div className="mb-3">
-                <label htmlFor="selectVehicle" className="form-label">
-                  Vehicle
-                </label>
-                <select
-                  id="selectVehicle"
-                  onChange={(e) => {
-                    setSelect(e.target.value);
-                  }}
-                  className="form-select"
-                  aria-label="select vehicle"
-                  defaultValue={
-                    select === id_vehicle[0] ? name[0] : "Select one Vehicle"
-                  }>
-                  {vehicle.map((item) => {
-                    return (
-                      <option
-                        key={item.id}
-                        className="text-capitalize"
-                        value={item.id}>
-                        {item.name}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-              <div className="mb-3">
                 <label forhtml="inputType" className="form-label">
                   Purpose
                 </label>
@@ -196,9 +158,6 @@ export default function ServiceEdit(props) {
                 </label>
                 <input
                   defaultValue={moment(start).format("YYYY-MM-DD")}
-                  onChange={(e) => {
-                    setStart(e.target.value);
-                  }}
                   type="date"
                   disabled
                   name="start_date"
@@ -216,7 +175,6 @@ export default function ServiceEdit(props) {
                     setEnd(e.target.value);
                   }}
                   type="date"
-                  disabled
                   name="end_date"
                   className="form-control"
                   id="inputYears"
