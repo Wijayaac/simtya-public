@@ -45,6 +45,7 @@ export default function LoanEdit(props) {
   const [endKm, setEndKm] = useState(loan[0].end_km);
   const [isLoading, setLoading] = useState(true);
   const [isFinish, setFinish] = useState(loan[0].finish || false);
+  const [nowKm, setNowKm] = useState(loan[0].now_km);
   useEffect(() => {
     setLoading(false);
     return () => {
@@ -109,7 +110,8 @@ export default function LoanEdit(props) {
                     Start Kilometer
                   </label>
                   <input
-                    defaultValue={startKm}
+                    value={startKm}
+                    defaultValue={nowKm}
                     onChange={(e) => {
                       setStartKm(e.target.value);
                     }}

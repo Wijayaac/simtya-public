@@ -80,7 +80,7 @@ export default function LoanDetail(props) {
                   </label>
                   <input
                     disabled
-                    defaultValue={loan[0].start_km}
+                    defaultValue={history.start_km}
                     type="number"
                     name="startKm"
                     className="form-control"
@@ -93,7 +93,7 @@ export default function LoanDetail(props) {
                   </label>
                   <input
                     disabled
-                    defaultValue={loan[0].end_km}
+                    defaultValue={history.end_km}
                     type="number"
                     name="endKm"
                     className="form-control"

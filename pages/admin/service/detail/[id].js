@@ -17,7 +17,7 @@ export async function getServerSideProps(ctx) {
   const token = await HandleAdminSSR(ctx);
   const { id } = ctx.query;
   const service = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/admin/servicedetail/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/service-detail/${id}`,
     {
       headers: {
         Authorization: token,

@@ -166,7 +166,7 @@ export default function Dashboard(props) {
     while (monthEnd.diff(monthStart, "months") <= 0) {
       months.push({
         id: monthStart.format("YYYY-MM"),
-        month: monthName.format("MMMM"),
+        month: monthName.format("MMM,YY"),
       });
       monthStart.subtract(1, "month");
       monthName.subtract(1, "month");
@@ -235,7 +235,7 @@ export default function Dashboard(props) {
                       <option defaultValue>---------</option>
                       {MONTHS().map((item) => {
                         return (
-                          <option key={item.id} defaultValue={item.id}>
+                          <option key={item.id} value={item.id}>
                             {item.month}
                           </option>
                         );
@@ -274,7 +274,7 @@ export default function Dashboard(props) {
                       <option defaultValue>---------</option>
                       {MONTHS().map((item) => {
                         return (
-                          <option key={item.id} defaultValue={item.id}>
+                          <option key={item.id} value={item.id}>
                             {item.month}
                           </option>
                         );
@@ -313,7 +313,7 @@ export default function Dashboard(props) {
                       <option defaultValue>---------</option>
                       {MONTHS().map((item) => {
                         return (
-                          <option key={item.id} defaultValue={item.id}>
+                          <option key={item.id} value={item.id}>
                             {item.month}
                           </option>
                         );

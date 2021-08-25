@@ -15,7 +15,7 @@ export async function getServerSideProps(ctx) {
   const token = await HandleDriverSSR(ctx);
   const { id } = ctx.query;
   const service = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/driver/servicedetail/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/driver/service-detail/${id}`,
     {
       headers: {
         Authorization: token,
@@ -43,6 +43,7 @@ export default function ServiceEdit(props) {
   const [description, setDescription] = useState(service[0].description);
   const [fee, setFee] = useState(service[0].service_fee);
   const [part, setPart] = useState(service[0].service_part);
+  const [nowKm, setNowKm] = useState(service[0].now_km);
   const [isLoading, setLoading] = useState(true);
   const [isFinish, setFinish] = useState(true);
 
@@ -111,7 +112,8 @@ export default function ServiceEdit(props) {
                     Start Kilometer
                   </label>
                   <input
-                    defaultValue={startKm}
+                    defaultValue={nowKm}
+                    value={startKm}
                     onChange={(e) => {
                       setStartKm(e.target.value);
                     }}
