@@ -130,7 +130,7 @@ export default function Loan(props) {
                   .map((item) => {
                     return (
                       <tr key={item.id}>
-                        <td>{item.name}</td>
+                        <td>{item.name + " : " + item.plate}</td>
                         <td>{item.username ? item.username : item.email}</td>
                         <td>
                           {moment

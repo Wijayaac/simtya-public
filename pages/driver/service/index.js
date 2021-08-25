@@ -77,10 +77,16 @@ export default function Service(props) {
   const [message, setMessage] = useState("");
 
   let services = eventService.map((item) => {
-    return { name: item.name, date: moment(item.start_at)._d };
+    return {
+      name: item.name + " : " + item.plate,
+      date: moment(item.start_at)._d,
+    };
   });
   let loans = eventLoan.map((item) => {
-    return { name: item.name, date: moment(item.start_at)._d };
+    return {
+      name: item.name + " : " + item.plate,
+      date: moment(item.start_at)._d,
+    };
   });
   let events = services.concat(loans);
 
@@ -193,7 +199,7 @@ export default function Service(props) {
                       className="text-capitalize"
                       key={item.id}
                       value={item.id}>
-                      {item.name}
+                      {item.name + " : " + item.plate}
                     </option>
                   );
                 })}
@@ -280,7 +286,7 @@ export default function Service(props) {
                       .map((item) => {
                         return (
                           <tr key={item.id}>
-                            <td>{item.name}</td>
+                            <td>{item.name + " : " + item.plate}</td>
                             <td>{item.type}</td>
                             <td>
                               {moment

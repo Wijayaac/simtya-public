@@ -41,6 +41,7 @@ export default function VehicleEdit(props) {
   );
   const [name, setName] = useState(data[0].name);
   const [brand, setBrand] = useState(data[0].brand);
+  const [plate, setPlate] = useState(data[0].plate);
   const [km, setKm] = useState(data[0].km);
   const [now, setNow] = useState(data[0].now_km);
   const [type, setType] = useState(data[0].type);
@@ -75,6 +76,7 @@ export default function VehicleEdit(props) {
     }
     data.append("id", id);
     data.append("name", name);
+    data.append("plate", plate);
     data.append("brand", brand);
     data.append("km", km);
     data.append("now", now);
@@ -159,6 +161,18 @@ export default function VehicleEdit(props) {
                   <option value="motorcycle">Motorcycle</option>
                   <option value="car">Car</option>
                 </select>
+              </div>
+              <div className="mb-3">
+                <label forHtml="inputPlate" className="form-label">
+                  Vehicle Plate
+                </label>
+                <input
+                  defaultValue={plate}
+                  onChange={(e) => setPlate(e.target.value)}
+                  type="text"
+                  name="plate"
+                  className="form-control"
+                />
               </div>
               <div className="mb-3">
                 <label forHtml="inputBrand" className="form-label">

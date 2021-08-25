@@ -102,7 +102,7 @@ export default function Service(props) {
                   .map((item) => {
                     return (
                       <tr key={item.id}>
-                        <td>{item.name}</td>
+                        <td>{item.name + " : " + item.plate}</td>
                         <td>{item.type}</td>
                         <td>
                           {moment

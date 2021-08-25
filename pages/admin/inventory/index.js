@@ -29,14 +29,15 @@ export async function getServerSideProps(ctx) {
 }
 export default function Inventory(props) {
   const { token } = props;
-  const [name, setName] = useState([]);
-  const [type, setType] = useState([]);
-  const [brand, setBrand] = useState([]);
+  const [name, setName] = useState("");
+  const [type, setType] = useState("");
+  const [brand, setBrand] = useState("");
   const [km, setKm] = useState(0);
-  const [years, setYears] = useState([]);
+  const [years, setYears] = useState(0);
   const [photo, setPhoto] = useState(false);
   const [preview, setPreview] = useState("/vercel.svg");
-  const [description, setDescription] = useState([]);
+  const [description, setDescription] = useState("");
+  const [plate, setPlate] = useState("");
   const [data, setData] = useState([
     { id: 1 },
     { id: 2 },
@@ -69,6 +70,7 @@ export default function Inventory(props) {
     let data = new FormData();
     data.append("name", name);
     data.append("type", type);
+    data.append("plate", plate);
     data.append("brand", brand);
     data.append("km", km);
     data.append("now", km);
@@ -167,42 +169,66 @@ export default function Inventory(props) {
                 <option value="car">Car</option>
               </select>
             </div>
-            <div className="mb-3">
-              <label forHtml="inputBrand" className="form-label">
-                Vehicle Brand
-              </label>
-              <input
-                onChange={(e) => setBrand(e.target.value)}
-                required
-                type="text"
-                name="brand"
-                className="form-control"
-              />
+            <div className="row row-cols-2">
+              <div className="col">
+                <div className="mb-3">
+                  <label forHtml="inputPlate" className="form-label">
+                    Vehicle Plate
+                  </label>
+                  <input
+                    onChange={(e) => setPlate(e.target.value)}
+                    required
+                    type="text"
+                    name="plate"
+                    className="form-control"
+                  />
+                </div>
+              </div>
+              <div className="col">
+                <div className="mb-3">
+                  <label forHtml="inputBrand" className="form-label">
+                    Vehicle Brand
+                  </label>
+                  <input
+                    onChange={(e) => setBrand(e.target.value)}
+                    required
+                    type="text"
+                    name="brand"
+                    className="form-control"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="mb-3">
-              <label forHtml="inputBrand" className="form-label">
-                Vehicle Kilometer
-              </label>
-              <input
-                onChange={(e) => setKm(e.target.value)}
-                required
-                type="number"
-                name="km"
-                className="form-control"
-              />
-            </div>
-            <div className="mb-3">
-              <label forHtml="inputYears" className="form-label">
-                Years
-              </label>
-              <input
-                onChange={(e) => setYears(e.target.value)}
-                required
-                type="number"
-                name="years"
-                className="form-control"
-                id="inputYears"
-              />
+            <div className="row row-cols-2">
+              <div className="col">
+                <div className="mb-3">
+                  <label forHtml="inputBrand" className="form-label">
+                    Vehicle Kilometer
+                  </label>
+                  <input
+                    onChange={(e) => setKm(e.target.value)}
+                    required
+                    type="number"
+                    name="km"
+                    className="form-control"
+                  />
+                </div>
+              </div>
+              <div className="col">
+                <div className="mb-3">
+                  <label forHtml="inputYears" className="form-label">
+                    Years
+                  </label>
+                  <input
+                    onChange={(e) => setYears(e.target.value)}
+                    required
+                    type="number"
+                    name="years"
+                    className="form-control"
+                    id="inputYears"
+                  />
+                </div>
+              </div>
             </div>
             <div className="mb-3">
               <label forHtml="inputPhoto" className="form-label">

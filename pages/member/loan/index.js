@@ -32,7 +32,7 @@ export async function getServerSideProps(ctx) {
   );
 
   const loan = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/member/loanlist/${sub}/${page}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/member/loan-list/${sub}/${page}`,
     { headers: { Authorization: token } }
   );
   const event = await axios.get(
@@ -70,10 +70,16 @@ export default function Loan(props) {
   const [message, setMessage] = useState("");
 
   let services = eventService.map((item) => {
-    return { name: item.name, date: moment(item.start_at)._d };
+    return {
+      name: item.name + " : " + item.plate,
+      date: moment(item.start_at)._d,
+    };
   });
   let loans = eventLoan.map((item) => {
-    return { name: item.name, date: moment(item.start_at)._d };
+    return {
+      name: item.name + " : " + item.plate,
+      date: moment(item.start_at)._d,
+    };
   });
   let events = services.concat(loans);
   useEffect(() => {
@@ -181,7 +187,7 @@ export default function Loan(props) {
                       key={item.id}
                       className="text-capitalize"
                       value={item.id}>
-                      {item.name}
+                      {item.name + " : " + item.plate}
                     </option>
                   );
                 })}
@@ -276,7 +282,7 @@ export default function Loan(props) {
                       .map((item) => {
                         return (
                           <tr key={item.id}>
-                            <td>{item.name}</td>
+                            <td>{item.name + " : " + item.plate}</td>
                             <td>{item.purpose}</td>
                             <td>{moment(item.start_at).format("DD MMMM")}</td>
                             <td>{moment(item.end_at).format("DD MMMM")}</td>
